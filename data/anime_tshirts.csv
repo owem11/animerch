@@ -1,0 +1,51 @@
+id,name,anime,category,price,stock,size,color,material,rating
+1,Naruto Sage Mode Tee,Naruto,Anime T-Shirt,999,50,S,Black,Cotton,4.7
+2,Sharingan Power Tee,Naruto,Anime T-Shirt,1099,40,M,Red,Cotton,4.6
+3,Uchiha Clan Symbol Tee,Naruto,Anime T-Shirt,1199,35,L,Black,Cotton,4.8
+4,Kakashi Copy Ninja Tee,Naruto,Anime T-Shirt,999,60,M,Grey,Cotton,4.5
+5,Hokage Legacy Tee,Naruto,Anime T-Shirt,1299,25,XL,White,Cotton,4.9
+6,Goku Ultra Instinct Tee,Dragon Ball,Anime T-Shirt,1099,55,L,White,Cotton,4.6
+7,Vegeta Saiyan Pride Tee,Dragon Ball,Anime T-Shirt,999,45,M,Blue,Cotton,4.5
+8,Dragon Ball Z Logo Tee,Dragon Ball,Anime T-Shirt,899,70,S,Orange,Cotton,4.4
+9,Gohan Beast Mode Tee,Dragon Ball,Anime T-Shirt,1299,30,L,Purple,Cotton,4.8
+10,Broly Legendary Saiyan Tee,Dragon Ball,Anime T-Shirt,1199,35,XL,Green,Cotton,4.7
+11,Luffy Gear 5 Tee,One Piece,Anime T-Shirt,1299,40,L,White,Cotton,4.9
+12,Zoro Three Sword Style Tee,One Piece,Anime T-Shirt,1099,45,XL,Green,Cotton,4.7
+13,Sanji Black Leg Tee,One Piece,Anime T-Shirt,999,50,M,Black,Cotton,4.5
+14,Straw Hat Pirates Tee,One Piece,Anime T-Shirt,899,80,S,Red,Cotton,4.4
+15,Ace Fire Fist Tee,One Piece,Anime T-Shirt,1199,30,L,Orange,Cotton,4.8
+16,Attack Titan Form Tee,Attack on Titan,Anime T-Shirt,1199,35,L,Brown,Cotton,4.8
+17,Survey Corps Logo Tee,Attack on Titan,Anime T-Shirt,999,60,M,Olive,Cotton,4.6
+18,Eren Yeager Rage Tee,Attack on Titan,Anime T-Shirt,1099,40,L,Black,Cotton,4.7
+19,Levi Ackerman Clean Cut Tee,Attack on Titan,Anime T-Shirt,1299,25,M,Grey,Cotton,4.9
+20,Wings of Freedom Tee,Attack on Titan,Anime T-Shirt,899,75,S,White,Cotton,4.5
+21,Gojo Infinity Eyes Tee,Jujutsu Kaisen,Anime T-Shirt,1299,45,M,Purple,Cotton,4.9
+22,Sukuna Curse King Tee,Jujutsu Kaisen,Anime T-Shirt,1099,35,L,Black,Cotton,4.7
+23,Megumi Shadow Technique Tee,Jujutsu Kaisen,Anime T-Shirt,999,50,M,Navy,Cotton,4.6
+24,Nobara Resonance Tee,Jujutsu Kaisen,Anime T-Shirt,899,60,S,Red,Cotton,4.5
+25,JJK Logo Streetwear Tee,Jujutsu Kaisen,Anime T-Shirt,999,55,L,White,Cotton,4.6
+26,Rengoku Flame Hashira Tee,Demon Slayer,Anime T-Shirt,1199,30,L,Orange,Cotton,4.8
+27,Nezuko Demon Form Tee,Demon Slayer,Anime T-Shirt,1099,40,M,Pink,Cotton,4.7
+28,Tanjiro Water Breathing Tee,Demon Slayer,Anime T-Shirt,999,50,M,Green,Cotton,4.6
+29,Zenitsu Thunder Clap Tee,Demon Slayer,Anime T-Shirt,999,45,L,Yellow,Cotton,4.5
+30,Demon Slayer Corps Tee,Demon Slayer,Anime T-Shirt,899,70,S,Black,Cotton,4.4
+31,Kaneki Ken Mask Tee,Tokyo Ghoul,Anime T-Shirt,1099,40,L,Black,Cotton,4.7
+32,Tokyo Ghoul Logo Tee,Tokyo Ghoul,Anime T-Shirt,899,65,M,White,Cotton,4.5
+33,Ryuk Shadow Tee,Death Note,Anime T-Shirt,999,50,M,Black,Cotton,4.6
+34,L Lawliet Minimal Tee,Death Note,Anime T-Shirt,1199,30,L,Grey,Cotton,4.8
+35,Kira Justice Tee,Death Note,Anime T-Shirt,1099,35,XL,Red,Cotton,4.7
+36,Ichigo Bankai Tee,Bleach,Anime T-Shirt,1199,40,L,Black,Cotton,4.8
+37,Bleach Hollow Mask Tee,Bleach,Anime T-Shirt,999,55,M,White,Cotton,4.6
+38,Rukia Ice Zanpakuto Tee,Bleach,Anime T-Shirt,899,60,S,Blue,Cotton,4.5
+39,Pochita Chainsaw Tee,Chainsaw Man,Anime T-Shirt,1299,45,M,Red,Cotton,4.9
+40,Denji Hybrid Form Tee,Chainsaw Man,Anime T-Shirt,1099,35,L,Orange,Cotton,4.7
+41,Makima Control Devil Tee,Chainsaw Man,Anime T-Shirt,1199,30,L,Black,Cotton,4.8
+42,Fullmetal Alchemist Symbol Tee,Fullmetal Alchemist,Anime T-Shirt,999,50,M,Black,Cotton,4.6
+43,Edward Elric Automail Tee,Fullmetal Alchemist,Anime T-Shirt,1099,40,L,Red,Cotton,4.7
+44,Alphonse Armor Tee,Fullmetal Alchemist,Anime T-Shirt,1199,30,XL,Grey,Cotton,4.8
+45,My Hero Academia UA Tee,My Hero Academia,Anime T-Shirt,999,60,M,Blue,Cotton,4.6
+46,Deku One For All Tee,My Hero Academia,Anime T-Shirt,1099,45,L,Green,Cotton,4.7
+47,Bakugo Explosion Tee,My Hero Academia,Anime T-Shirt,1199,35,L,Orange,Cotton,4.8
+48,All Might Plus Ultra Tee,My Hero Academia,Anime T-Shirt,1299,25,XL,Yellow,Cotton,4.9
+49,Spy x Family Anya Tee,Spy x Family,Anime T-Shirt,999,70,S,Pink,Cotton,4.6
+50,Spy x Family Forger Family Tee,Spy x Family,Anime T-Shirt,1199,40,M,Green,Cotton,4.8
