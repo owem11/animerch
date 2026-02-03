@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "../context/AuthContext";
+import { ThemeWrapper } from "@/components/ThemeWrapper";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -16,15 +17,23 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
+            <head>
+                {/* Google Fonts: Orbitron for Cyber theme */}
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+            </head>
             <body className="font-sans antialiased min-h-screen bg-background text-foreground">
                 <AuthProvider>
-                    <div className="flex flex-col min-h-screen">
-                        <Navbar />
-                        <main className="flex-1">
-                            {children}
-                        </main>
-                        <Footer />
-                    </div>
+                    <ThemeWrapper>
+                        <div className="flex flex-col min-h-screen relative z-10">
+                            <Navbar />
+                            <main className="flex-1">
+                                {children}
+                            </main>
+                            <Footer />
+                        </div>
+                    </ThemeWrapper>
                 </AuthProvider>
             </body>
         </html>

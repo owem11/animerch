@@ -6,71 +6,247 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
-
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
-
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
-
     --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
+}
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+/* ===== DEFAULT/RETRO FONT: Century Gothic ===== */
+html,
+body {
+  font-family: "Century Gothic", "Futura", -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+/* ===== CYBER THEME (R.A.C.E.N CLONE) ===== */
+.theme-cyber {
+  --background: 220 27% 6% !important;
+  --foreground: 0 0% 98% !important;
+  --card: 220 20% 10% !important;
+  --card-foreground: 0 0% 98% !important;
+  --popover: 220 27% 8% !important;
+  --popover-foreground: 0 0% 98% !important;
+  --primary: 11 100% 65% !important;
+  --primary-foreground: 0 0% 100% !important;
+  --secondary: 186 100% 50% !important;
+  --secondary-foreground: 220 27% 6% !important;
+  --muted: 220 17% 14% !important;
+  --muted-foreground: 220 10% 65% !important;
+  --accent: 186 100% 50% !important;
+  --accent-foreground: 220 27% 6% !important;
+  --border: 220 17% 20% !important;
+  --input: 220 17% 15% !important;
+  --ring: 11 100% 65% !important;
+  --radius: 0.35rem;
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+  /* GRID PATTERN + DARK BACKGROUND */
+  background-color: hsl(220 27% 6%) !important;
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.1) 1px, transparent 1px) !important;
+  background-size: 50px 50px !important;
+  background-attachment: fixed !important;
+  color: hsl(0 0% 98%) !important;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+  /* ORBITRON FONT FOR CYBER THEME */
+  font-family: "Orbitron", "Century Gothic", sans-serif !important;
+}
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+/* ===== RETRO THEME (VESPER CLONE) ===== */
+.theme-retro {
+  --background: 38 46% 91% !important;
+  --foreground: 0 0% 0% !important;
+  --card: 0 0% 100% !important;
+  --card-foreground: 0 0% 0% !important;
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 0 0% 0% !important;
+  --primary: 265 34% 74% !important;
+  --primary-foreground: 0 0% 0% !important;
+  --secondary: 152 48% 78% !important;
+  --secondary-foreground: 0 0% 0% !important;
+  --muted: 38 30% 85% !important;
+  --muted-foreground: 0 0% 30% !important;
+  --accent: 0 71% 81% !important;
+  --accent-foreground: 0 0% 0% !important;
+  --border: 0 0% 0% !important;
+  --input: 38 46% 91% !important;
+  --ring: 0 0% 0% !important;
+  --radius: 2rem;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+  background-color: hsl(38 46% 91%) !important;
+  color: hsl(0 0% 0%) !important;
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+  /* Century Gothic for Retro (same as default) */
+  font-family: "Century Gothic", "Futura", sans-serif !important;
+}
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+/* RETRO THEME DROPDOWN STYLES */
+.theme-retro div[role="menu"],
+.theme-retro div[data-radix-popper-content-wrapper] div[role="menu"] {
+  background-color: hsl(var(--card)) !important;
+  border: 1.5px solid black !important;
+  border-radius: 1.5rem !important;
+  padding: 0.5rem !important;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+}
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-  }
+.theme-retro [role="menuitem"] {
+  border-radius: 9999px !important;
+  margin: 0.25rem 0.25rem !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-retro [role="menuitem"]:hover,
+.theme-retro [role="menuitem"][data-highlighted] {
+  background-color: hsl(var(--accent)) !important;
+  color: black !important;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* ===== CYBER GRID BACKGROUND - ONLY VISIBLE IN CYBER THEME ===== */
+/* Grid is invisible by default */
+.cyber-grid {
+  background-image: none;
+}
+
+/* Grid pattern only shows when Cyber theme is active */
+body.theme-cyber .cyber-grid,
+html.theme-cyber .cyber-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.1) 1px, transparent 1px) !important;
+  background-size: 50px 50px !important;
+  background-attachment: fixed !important;
+}
+
+/* CYBER THEME: Make all content areas transparent so grid shows through */
+body.theme-cyber,
+body.theme-cyber main,
+body.theme-cyber .container,
+body.theme-cyber [class*="bg-background"] {
+  background-color: transparent !important;
+}
+
+/* CYBER THEME: Fixed grid overlay covering EVERYTHING */
+body.theme-cyber::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsl(220 27% 6%);
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Ensure all content is above the grid */
+body.theme-cyber>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== CYBER GRADIENT TEXT (RACEN "AI Voice" STYLE) ===== */
+.cyber-gradient-text {
+  background: linear-gradient(90deg, #00e5ff 0%, #00b8d4 30%, #ff8a65 70%, #ff6b4a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Apply gradient AND Orbitron font to h1 and h2 headings in Cyber theme */
+.theme-cyber h1,
+.theme-cyber h2 {
+  font-family: "Orbitron", sans-serif !important;
+  background: linear-gradient(90deg, #00e5ff 0%, #00b8d4 30%, #ff8a65 70%, #ff6b4a 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Orbitron font for all other headings in Cyber theme */
+.theme-cyber h3,
+.theme-cyber h4,
+.theme-cyber h5,
+.theme-cyber h6 {
+  font-family: "Orbitron", sans-serif !important;
+}
+
+/* Keep smaller headings and text white in Cyber */
+.theme-cyber h3,
+.theme-cyber h4,
+.theme-cyber h5,
+.theme-cyber h6,
+.theme-cyber p,
+.theme-cyber span {
+  -webkit-text-fill-color: inherit;
+}
+
+/* ===== GLOBAL BACKGROUND CONSISTENCY ===== */
+html.theme-cyber,
+html.theme-cyber body,
+html.theme-cyber main {
+  background-color: hsl(220 27% 6%) !important;
+  min-height: 100vh;
+}
+
+html.theme-retro,
+html.theme-retro body,
+html.theme-retro main {
+  background-color: hsl(38 46% 91%) !important;
+  min-height: 100vh;
+}
+
+/* ===== VESPER STYLE CARDS ===== */
+.theme-retro [class*="rounded-xl"],
+.theme-retro .card {
+  border: 2px solid black !important;
+  border-radius: 0.25rem !important;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+}
+
+/* ===== RACEN STYLE BUTTONS ===== */
+.theme-cyber button[class*="bg-primary"] {
+  background: linear-gradient(135deg, #ff6b4a 0%, #ff5533 100%) !important;
+  border-radius: 0.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }

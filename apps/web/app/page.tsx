@@ -118,71 +118,73 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
 
     // Default Homepage View
     return (
-        <div className="container py-8 space-y-20">
+        <div className="min-h-screen cyber-grid">
+            <div className="container py-12 space-y-24 relative z-10">
 
-            {/* Recommended Section */}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="h-5 w-5 text-yellow-500" />
-                    <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Editor's Picks</span>
-                </div>
-                <div className="flex items-end justify-between border-b pb-4">
-                    <h2 className="text-4xl font-black tracking-tighter uppercase">Recommended Merch</h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {recommendedData.data.map((product: Product) => (
-                        <ProductCard key={product.id} {...product} price={product.sellingPrice} />
-                    ))}
-                </div>
-            </section>
-
-            {/* New Arrivals Section */}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 mb-2">
-                    <Clock className="h-5 w-5 text-blue-500" />
-                    <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Just Dropped</span>
-                </div>
-                <div className="flex items-end justify-between border-b pb-4">
-                    <h2 className="text-4xl font-black tracking-tighter uppercase">New Arrivals</h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {newArrivalsData.data.length > 0 ? (
-                        newArrivalsData.data.map((product: Product) => (
+                {/* Recommended Section */}
+                <section className="space-y-10">
+                    <div className="flex items-center gap-4 mb-2">
+                        <div className="h-[2px] w-12 bg-primary" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Editor&apos;s Picks</span>
+                    </div>
+                    <div className="flex items-end justify-between border-b border-border/40 pb-6">
+                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Recommended</h2>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                        {recommendedData.data.map((product: Product) => (
                             <ProductCard key={product.id} {...product} price={product.sellingPrice} />
-                        ))
-                    ) : (
-                        <div className="col-span-full py-10 text-center text-muted-foreground">
-                            <p>No new arrivals yet. Check back soon!</p>
-                        </div>
-                    )}
-                </div>
-            </section>
+                        ))}
+                    </div>
+                </section>
 
-            {/* Most Bought / Trending Section */}
-            <section className="space-y-6">
-                <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Trending Now</span>
-                </div>
-                <div className="flex items-end justify-between border-b pb-4">
-                    <h2 className="text-4xl font-black tracking-tighter uppercase">Most Bought</h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {mostBoughtData.data.map((product: Product) => (
-                        <ProductCard key={product.id} {...product} price={product.sellingPrice} />
-                    ))}
-                </div>
-            </section>
+                {/* New Arrivals Section */}
+                <section className="space-y-10">
+                    <div className="flex items-center gap-4 mb-2">
+                        <div className="h-[2px] w-12 bg-primary" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Just Dropped</span>
+                    </div>
+                    <div className="flex items-end justify-between border-b border-border/40 pb-6">
+                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">New Arrivals</h2>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                        {newArrivalsData.data.length > 0 ? (
+                            newArrivalsData.data.map((product: Product) => (
+                                <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                            ))
+                        ) : (
+                            <div className="col-span-full py-10 text-center text-muted-foreground">
+                                <p>No new arrivals yet. Check back soon!</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
 
-            {/* All Products with Dropbar/Collapse */}
-            <section className="space-y-6">
-                <div className="flex items-end justify-between border-b pb-4">
-                    <h2 className="text-4xl font-black tracking-tighter uppercase">All Collections</h2>
-                    <p className="text-muted-foreground font-medium">{productsData.count} items</p>
-                </div>
+                {/* Most Bought / Trending Section */}
+                <section className="space-y-10">
+                    <div className="flex items-center gap-4 mb-2">
+                        <div className="h-[2px] w-12 bg-primary" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Trending Now</span>
+                    </div>
+                    <div className="flex items-end justify-between border-b border-border/40 pb-6">
+                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Most Bought</h2>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                        {mostBoughtData.data.map((product: Product) => (
+                            <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                        ))}
+                    </div>
+                </section>
 
-                <ProductGrid products={productsData.data} />
-            </section>
+                {/* All Products with Dropbar/Collapse */}
+                <section className="space-y-10">
+                    <div className="flex items-end justify-between border-b border-border/40 pb-6">
+                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Collections</h2>
+                        <p className="text-muted-foreground font-black text-xs tracking-widest">{productsData.count} ITEMS</p>
+                    </div>
+
+                    <ProductGrid products={productsData.data} />
+                </section>
+            </div>
         </div>
     );
 }

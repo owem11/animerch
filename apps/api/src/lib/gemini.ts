@@ -11,44 +11,41 @@ const generateImageWithNanoBananaPro = async (prompt: string): Promise<string | 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) return null;
 
-        // Try the Generative Language API endpoint for Imagen 3
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
+        // Use Nano Banana Pro (Gemini 3 Pro Image Preview) via generateContent
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                instances: [
-                    { prompt: prompt }
-                ],
-                parameters: {
-                    sampleCount: 1,
-                    aspectRatio: "1:1"
-                }
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }]
             })
         });
 
         if (!response.ok) {
-            console.warn("Nano Banana Pro (Imagen 3) API Error:", response.status, await response.text());
+            console.warn("Nano Banana Pro (Gemini 3) API Error:", response.status, await response.text());
             return null;
         }
 
         const data = await response.json();
-        // Check for Vertex AI style response or Generative Language style
-        if (data.predictions && data.predictions[0] && data.predictions[0].bytesBase64Encoded) {
-            return `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
-        }
-        // Check for alternative format just in case
-        if (data.predictions && data.predictions[0] && data.predictions[0].mimeType && data.predictions[0].bytesBase64Encoded) {
-            return `data:${data.predictions[0].mimeType};base64,${data.predictions[0].bytesBase64Encoded}`;
+
+        // Extract inlineData from candidate
+        const part = data.candidates?.[0]?.content?.parts?.[0];
+        if (part?.inlineData && part.inlineData.data) {
+            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
         }
 
         return null;
     } catch (error) {
-        console.error("Nano Banana Pro (Imagen 3) Exception:", error);
+        console.error("Nano Banana Pro (Gemini 3) Exception:", error);
         return null;
     }
 };
+
 
 export const generateImageFromDescription = async (title: string, description: string) => {
     try {

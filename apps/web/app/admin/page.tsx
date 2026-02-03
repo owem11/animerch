@@ -79,7 +79,7 @@ export default function AdminDashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50/50">
+        <div className="min-h-screen cyber-grid">
             <div className="container mx-auto p-8">
                 <div className="mb-8 flex items-center justify-between">
                     <div>

@@ -4,15 +4,43 @@ import { users, orders, orderItems, products, cartItems } from "../db/schema";
 import { eq, sql, desc, count } from "drizzle-orm";
 import { authenticateToken, AuthRequest } from "../middleware/auth";
 import { requireAdmin } from "../middleware/admin";
+import { generateImageFromDescription } from "../lib/gemini";
+import fs from "fs";
+import path from "path";
 
 const router = Router();
 
+// Helper to save base64 image to file system
+const saveGeneratedImage = (base64Data: string, title: string): string => {
+    try {
+        const base64Content = base64Data.split(';base64,').pop();
+        if (!base64Content) throw new Error("Invalid base64 data");
 
+        const timestamp = Date.now();
+        const sanitizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        const fileName = `${sanitizedTitle}-${timestamp}.jpg`;
 
+        const webPublicPath = path.resolve(__dirname, "../../../web/public/products", fileName);
+        const dataImgPath = path.resolve(__dirname, "../../../../../data/img", fileName);
+
+        [path.dirname(webPublicPath), path.dirname(dataImgPath)].forEach(dir => {
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        });
+
+        const buffer = Buffer.from(base64Content, 'base64');
+        fs.writeFileSync(webPublicPath, buffer);
+        fs.writeFileSync(dataImgPath, buffer);
+
+        console.log(`Image saved to ${webPublicPath} and ${dataImgPath}`);
+        return `/products/${fileName}`;
+    } catch (error) {
+        console.error("Error saving generated image:", error);
+        throw error;
+    }
+};
 
 // Protect all admin routes
 router.use(authenticateToken, requireAdmin);
-
 
 // Dashboard Stats
 router.get("/stats", async (req: AuthRequest, res: Response) => {
@@ -21,15 +49,12 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
         const totalOrders = await db.select({ count: count() }).from(orders);
         const totalProducts = await db.select({ count: count() }).from(products);
 
-        // Sum of total sales
         const salesResult = await db.select({
             totalSales: sql<number>`sum(${orders.total})`
         }).from(orders);
 
-        // Inventory Status (low stock)
         const lowStock = await db.select().from(products).where(sql`${products.stock} < 10`).limit(5);
 
-        // Sales by product (top 5)
         const topProducts = await db.select({
             id: products.id,
             title: products.title,
@@ -41,7 +66,6 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
             .orderBy(desc(sql`sum(${orderItems.quantity})`))
             .limit(5);
 
-        // CHART: Sales History (Last 7 days) - JS Aggregation for easier DB compatibility
         const recentOrders = await db.select({
             createdAt: orders.createdAt,
             total: orders.total
@@ -53,27 +77,22 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
         const salesMap = new Map<string, number>();
         recentOrders.forEach(order => {
             if (!order.createdAt) return;
-            const dateStr = new Date(order.createdAt).toLocaleDateString("en-US", { month: 'short', day: '2-digit' }); // e.g., "Jan 01"
+            const dateStr = new Date(order.createdAt).toLocaleDateString("en-US", { month: 'short', day: '2-digit' });
             salesMap.set(dateStr, (salesMap.get(dateStr) || 0) + Number(order.total));
         });
 
         const salesHistory = Array.from(salesMap.entries()).map(([name, total]) => ({ name, total }));
 
-        // Total Sales & Total Profit
-        // Profit = Sum((ItemPrice - CostPrice) * Quantity)
         const profitResult = await db.select({
             totalProfit: sql<number>`sum((${products.sellingPrice} - COALESCE(${products.costPrice}, 0)) * ${orderItems.quantity})`
         })
             .from(orderItems)
             .innerJoin(products, eq(orderItems.productId, products.id));
 
-        // ... existing chart code ...
-
-        // CHART: Profit History (Last 7 days)
         const recentProfitItems = await db.select({
             createdAt: orders.createdAt,
             price: orderItems.price,
-            sellingPrice: products.sellingPrice, // Add current selling price
+            sellingPrice: products.sellingPrice,
             costPrice: products.costPrice,
             quantity: orderItems.quantity
         })
@@ -87,14 +106,12 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
         recentProfitItems.forEach(item => {
             if (!item.createdAt) return;
             const dateStr = new Date(item.createdAt).toLocaleDateString("en-US", { month: 'short', day: '2-digit' });
-            // Use sellingPrice to ensure positive margin and consistency with Inventory table
             const profit = (Number(item.sellingPrice) - (item.costPrice ? Number(item.costPrice) : 0)) * item.quantity;
             profitMap.set(dateStr, (profitMap.get(dateStr) || 0) + profit);
         });
 
         const profitHistory = Array.from(profitMap.entries()).map(([name, total]) => ({ name, total }));
 
-        // CHART: Profit by Category (replacing Sales by Category)
         const categoryProfit = await db.select({
             name: products.category,
             value: sql<number>`sum((${products.sellingPrice} - COALESCE(${products.costPrice}, 0)) * ${orderItems.quantity})`
@@ -103,7 +120,6 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
             .innerJoin(products, eq(orderItems.productId, products.id))
             .groupBy(products.category);
 
-        // ABANDONED CARTS (All active cart items)
         const abandonedCarts = await db
             .select({
                 cartId: cartItems.id,
@@ -117,7 +133,7 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
             .innerJoin(users, eq(cartItems.userId, users.id))
             .innerJoin(products, eq(cartItems.productId, products.id))
             .orderBy(desc(cartItems.createdAt))
-            .limit(10); // Show recent 10
+            .limit(10);
 
         res.json({
             users: totalUsers[0].count,
@@ -189,19 +205,14 @@ router.get("/users", async (req: AuthRequest, res: Response) => {
     }
 });
 
-// Get Single User Details (with Cart and Orders)
+// Get Single User Details
 router.get("/users/:id", async (req: AuthRequest, res: Response) => {
     try {
         const userId = Number(req.params.id);
-
         const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
-        if (user.length === 0) {
-            return res.status(404).json({ error: "User not found" });
-        }
+        if (user.length === 0) return res.status(404).json({ error: "User not found" });
 
         const userOrders = await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
-
-        // Get user's current cart (abandoned items)
         const userCart = await db
             .select({
                 id: cartItems.id,
@@ -213,24 +224,40 @@ router.get("/users/:id", async (req: AuthRequest, res: Response) => {
             .where(eq(cartItems.userId, userId));
 
         const { passwordHash, ...safeUser } = user[0];
-
-        res.json({
-            user: safeUser,
-            orders: userOrders,
-            cart: userCart
-        });
-
+        res.json({ user: safeUser, orders: userOrders, cart: userCart });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to fetch user details" });
     }
 });
 
-// Update Product Prices and Stock
+// Generate AI Image
+router.post("/generate-image", async (req: AuthRequest, res: Response) => {
+    try {
+        const { title, description } = req.body;
+        if (!title) return res.status(400).json({ error: "Title is required" });
+        const imageUrl = await generateImageFromDescription(title, description || "");
+        res.json({ imageUrl });
+    } catch (error) {
+        console.error("Generate image error:", error);
+        res.status(500).json({ error: "Failed to generate image" });
+    }
+});
+
+// Update Product
 router.put("/products/:id", async (req: AuthRequest, res: Response) => {
     try {
         const productId = Number(req.params.id);
-        const { sellingPrice, costPrice, stock, title, description, category, imageUrl, anime, availableSizes, availableColors } = req.body;
+        let { sellingPrice, costPrice, stock, title, description, category, imageUrl, anime, availableSizes, availableColors } = req.body;
+
+        console.log(`Updating product ${productId}. Image URL length: ${imageUrl?.length || 0}`);
+
+        // If imageUrl is base64, save it to file system
+        if (imageUrl && imageUrl.startsWith('data:image/')) {
+            console.log("Detected base64 image, saving to file system...");
+            imageUrl = saveGeneratedImage(imageUrl, title);
+            console.log(`Image saved. New path: ${imageUrl}`);
+        }
 
         await db.update(products)
             .set({
@@ -247,7 +274,7 @@ router.put("/products/:id", async (req: AuthRequest, res: Response) => {
             })
             .where(eq(products.id, productId));
 
-        res.json({ message: "Product updated" });
+        res.json({ message: "Product updated", imageUrl });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to update product" });
@@ -257,11 +284,15 @@ router.put("/products/:id", async (req: AuthRequest, res: Response) => {
 // Create New Product
 router.post("/products", async (req: AuthRequest, res: Response) => {
     try {
-        const { title, description, category, sellingPrice, costPrice, stock, imageUrl, anime, availableSizes, availableColors } = req.body;
+        let { title, description, category, sellingPrice, costPrice, stock, imageUrl, anime, availableSizes, availableColors } = req.body;
+        if (!title || !sellingPrice) return res.status(400).json({ error: "Title and Selling Price are required" });
 
-        // Basic validation
-        if (!title || !sellingPrice) {
-            return res.status(400).json({ error: "Title and Selling Price are required" });
+        console.log(`Creating new product. Image URL length: ${imageUrl?.length || 0}`);
+
+        if (imageUrl && imageUrl.startsWith('data:image/')) {
+            console.log("Detected base64 image, saving to file system...");
+            imageUrl = saveGeneratedImage(imageUrl, title);
+            console.log(`Image saved. New path: ${imageUrl}`);
         }
 
         const result = await db.insert(products).values({
@@ -278,7 +309,7 @@ router.post("/products", async (req: AuthRequest, res: Response) => {
             availableColors: availableColors || null,
         });
 
-        res.status(201).json({ message: "Product created successfully", id: result[0].insertId });
+        res.status(201).json({ message: "Product created successfully", id: result[0].insertId, imageUrl });
     } catch (error) {
         console.error("Create product error:", error);
         res.status(500).json({ error: "Failed to create product" });
@@ -294,22 +325,6 @@ router.delete("/products/:id", async (req: AuthRequest, res: Response) => {
     } catch (error) {
         console.error("Delete error:", error);
         res.status(500).json({ error: "Failed to delete product" });
-    }
-});
-
-import { generateImageFromDescription } from "../lib/gemini";
-
-// Generate AI Image
-router.post("/generate-image", async (req: AuthRequest, res: Response) => {
-    try {
-        const { title, description } = req.body;
-        if (!title) return res.status(400).json({ error: "Title is required" });
-
-        const imageUrl = await generateImageFromDescription(title, description || "");
-        res.json({ imageUrl });
-    } catch (error) {
-        console.error("Generate image error:", error);
-        res.status(500).json({ error: "Failed to generate image" });
     }
 });
 
