@@ -13,6 +13,7 @@ interface Product {
     id: number;
     title: string;
     category: string;
+    description?: string;
     sellingPrice: string;
     costPrice?: string;
     stock: number;
@@ -206,10 +207,7 @@ export default function AdminProductsPage() {
         setEditTitle(product.title);
         setEditCategory(product.category);
         setEditAnime(product.anime || "");
-        setEditDescription(""); // Description not currently in product list, might need to fetch or just start empty/keep existing if we had it. 
-        // Note: Product list might not have description if not selected. 
-        // For now, let's assume we might edit it or keep it as is. 
-        // Actually, let's just default to empty if missing.
+        setEditDescription(product.description || "");
         setEditSellingPrice(product.sellingPrice);
         setEditCostPrice(product.costPrice || (Number(product.sellingPrice) * 0.7).toFixed(2));
         setEditStock(String(product.stock));
