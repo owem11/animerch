@@ -17,10 +17,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     useEffect(() => {
         // Load saved theme on mount
         const savedTheme = localStorage.getItem('animerch-theme') as Theme;
-        if (savedTheme && ['default', 'cyber', 'retro'].includes(savedTheme)) {
-            setTheme(savedTheme);
-            applyTheme(savedTheme);
-        }
+        const finalTheme = (savedTheme && ['default', 'cyber', 'retro'].includes(savedTheme))
+            ? savedTheme
+            : 'default';
+
+        setTheme(finalTheme);
+        applyTheme(finalTheme);
     }, []);
 
     const applyTheme = (newTheme: Theme) => {
@@ -32,11 +34,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         htmlEl.classList.remove('theme-default', 'theme-cyber', 'theme-retro');
         bodyEl.classList.remove('theme-default', 'theme-cyber', 'theme-retro');
 
-        // Add new theme class if not default
-        if (newTheme !== 'default') {
-            htmlEl.classList.add(`theme-${newTheme}`);
-            bodyEl.classList.add(`theme-${newTheme}`);
-        }
+        // Add new theme class
+        htmlEl.classList.add(`theme-${newTheme}`);
+        bodyEl.classList.add(`theme-${newTheme}`);
     };
 
     const handleThemeChange = (newTheme: Theme) => {

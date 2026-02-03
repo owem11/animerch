@@ -30,6 +30,61 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
+
+  /* DEFAULT THEME NAVAR FIX */
+  .theme-default nav {
+    --background: 0 0% 0% !important;
+    --foreground: 0 0% 100% !important;
+    --muted: 0 0% 15% !important;
+    --muted-foreground: 0 0% 70% !important;
+    --border: 0 0% 20% !important;
+    --accent: 0 0% 15% !important;
+    --accent-foreground: 0 0% 100% !important;
+
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+  }
+
+  /* Ensure all nested elements in default nav inherit these flipped colors */
+  .theme-default nav a,
+  .theme-default nav span,
+  .theme-default nav svg:not([class*="text-cyan"]):not([class*="text-purple"]) {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .theme-default nav button:not([class*="bg-primary"]) {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .theme-default nav .hover\:text-primary:hover {
+    color: hsla(var(--foreground), 0.7) !important;
+  }
+
+  .theme-default nav input {
+    background-color: hsl(var(--muted)) !important;
+    color: hsl(var(--foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+
+  .theme-default nav input::placeholder {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Category Dropdown specifically for default theme */
+  .theme-default nav .group div[class*="bg-background"] {
+    background-color: hsl(var(--background)) !important;
+    border-color: hsl(var(--border)) !important;
+  }
+
+  .theme-default nav .group div[class*="bg-background"] a {
+    color: hsla(var(--foreground), 0.8) !important;
+  }
+
+  .theme-default nav .group div[class*="bg-background"] a:hover {
+    background-color: hsl(var(--muted)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
 }
 
 /* ===== DEFAULT/RETRO FONT: Century Gothic ===== */
