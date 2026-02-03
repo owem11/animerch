@@ -3,12 +3,12 @@ import { ProductCard } from "@/components/ProductCard";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, TrendingUp, Clock } from "lucide-react";
 
 interface Product {
     id: number;
     title: string;
-    price: string;
+    sellingPrice: string;
     description: string;
     category: string;
     rating: string;
@@ -18,7 +18,7 @@ interface Product {
 async function getProducts(params: Record<string, string>) {
     try {
         const searchParams = new URLSearchParams(params);
-        const res = await fetch(`http://localhost:3001/api/products?${searchParams.toString()}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001"}/api/products?${searchParams.toString()}`, {
             cache: "no-store",
         });
         if (!res.ok) {
@@ -34,8 +34,8 @@ async function getProducts(params: Record<string, string>) {
 
 async function getRecommendedProducts() {
     try {
-        const res = await fetch("http://localhost:3001/api/products?sort=rating&limit=4", {
-            next: { revalidate: 3600 },
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001"}/api/products?sort=rating&limit=4`, {
+            cache: "no-store",
         });
         if (!res.ok) return { data: [] };
         return res.json();
@@ -48,8 +48,8 @@ async function getMostBoughtProducts() {
     try {
         // Mocking "Most Bought" using price_desc for now to show premium items
         // In a real scenario, this would fetch based on order volume
-        const res = await fetch("http://localhost:3001/api/products?sort=price_desc&limit=4", {
-            next: { revalidate: 3600 },
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001"}/api/products?sort=price_desc&limit=4`, {
+            cache: "no-store",
         });
         if (!res.ok) return { data: [] };
         return res.json();
@@ -58,10 +58,24 @@ async function getMostBoughtProducts() {
     }
 }
 
+async function getNewArrivals() {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001"}/api/products?sort=createdAt&limit=4`, {
+            cache: "no-store",
+        });
+        if (!res.ok) return { data: [] };
+        return res.json();
+    } catch (error) {
+        console.error("New Arrivals error:", error);
+        return { data: [] };
+    }
+}
+
 export default async function Home({ searchParams }: { searchParams: { search?: string; category?: string; sort?: string } }) {
     const productsData = await getProducts(searchParams as Record<string, string>);
     const recommendedData = await getRecommendedProducts();
     const mostBoughtData = await getMostBoughtProducts();
+    const newArrivalsData = await getNewArrivals();
 
     // If searching or filtering, show simple results view
     if (searchParams.search || searchParams.category) {
@@ -86,7 +100,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                     {productsData.data.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {productsData.data.map((product: Product) => (
-                                <ProductCard key={product.id} {...product} />
+                                <ProductCard key={product.id} {...product} price={product.sellingPrice} />
                             ))}
                         </div>
                     ) : (
@@ -117,8 +131,30 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {recommendedData.data.map((product: Product) => (
-                        <ProductCard key={product.id} {...product} />
+                        <ProductCard key={product.id} {...product} price={product.sellingPrice} />
                     ))}
+                </div>
+            </section>
+
+            {/* New Arrivals Section */}
+            <section className="space-y-6">
+                <div className="flex items-center gap-2 mb-2">
+                    <Clock className="h-5 w-5 text-blue-500" />
+                    <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Just Dropped</span>
+                </div>
+                <div className="flex items-end justify-between border-b pb-4">
+                    <h2 className="text-4xl font-black tracking-tighter uppercase">New Arrivals</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {newArrivalsData.data.length > 0 ? (
+                        newArrivalsData.data.map((product: Product) => (
+                            <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                        ))
+                    ) : (
+                        <div className="col-span-full py-10 text-center text-muted-foreground">
+                            <p>No new arrivals yet. Check back soon!</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -133,7 +169,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {mostBoughtData.data.map((product: Product) => (
-                        <ProductCard key={product.id} {...product} />
+                        <ProductCard key={product.id} {...product} price={product.sellingPrice} />
                     ))}
                 </div>
             </section>

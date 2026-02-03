@@ -14,6 +14,7 @@ function LoginForm() {
     const searchParams = useSearchParams();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
     const [error, setError] = useState("");
 
     const successMessage = searchParams.get("signup") === "success" ? "Account created successfully! Please log in." : "";
@@ -34,7 +35,18 @@ function LoginForm() {
             }
 
             const data = await res.json();
-            login(data.token, data.user, searchParams.get("redirect") || "/");
+
+
+            // Strict Role Separation
+            if (isAdmin && data.user.role !== 'admin') {
+                throw new Error("Unauthorized access. You are not an admin. Please use User Login.");
+            }
+            if (!isAdmin && data.user.role === 'admin') {
+                throw new Error("Admin accounts must log in via the Admin Login.");
+            }
+
+            const redirectPath = isAdmin ? "/admin" : (searchParams.get("redirect") || "/");
+            login(data.token, data.user, redirectPath);
         } catch (err: any) {
             setError(err.message);
         }
@@ -68,15 +80,27 @@ function LoginForm() {
                 </div>
 
                 <Button type="submit" className="w-full">
-                    Log In
+                    {isAdmin ? "Log In as Admin" : "Log In"}
                 </Button>
 
-                <p className="text-center text-sm text-muted-foreground mt-4">
-                    Don't have an account?{" "}
-                    <Link href="/signup" className="text-primary hover:underline">
-                        Sign up
-                    </Link>
-                </p>
+                <div className="text-center mt-4">
+                    <button
+                        type="button"
+                        onClick={() => setIsAdmin(!isAdmin)}
+                        className="text-sm text-muted-foreground hover:text-primary underline"
+                    >
+                        {isAdmin ? "Not an admin? Go to User Login" : "Are you an admin? Login here"}
+                    </button>
+                </div>
+
+                {!isAdmin && (
+                    <p className="text-center text-sm text-muted-foreground mt-2">
+                        Don't have an account?{" "}
+                        <Link href="/signup" className="text-primary hover:underline">
+                            Sign up
+                        </Link>
+                    </p>
+                )}
             </form>
         </div>
     );

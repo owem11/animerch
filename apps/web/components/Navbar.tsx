@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Search, ShoppingCart, User as UserIcon } from "lucide-react";
+import { Search, ShoppingCart, User as UserIcon, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -32,8 +32,40 @@ export function Navbar() {
             <nav className="w-full border-b bg-background sticky top-0 z-50">
                 <div className="container flex items-center justify-between h-16">
                     {/* Left: Categories / Sort (could be dropdowns here or on page) */}
+                    {/* Left: Categories / Sort */}
                     <div className="flex items-center gap-6 text-sm font-medium">
                         <Link href="/" className="hover:text-primary/80 transition-colors">HOME</Link>
+
+                        {/* Category Dropdown */}
+                        <div className="relative group">
+                            <button className="flex items-center gap-1 hover:text-primary/80 transition-colors uppercase">
+                                Categories <ChevronDown className="h-4 w-4" />
+                            </button>
+                            <div className="absolute top-full left-0 pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div className="bg-background border rounded-md shadow-lg py-2 flex flex-col">
+                                    {[
+                                        "Anime T-Shirt",
+                                        "Hoodies",
+                                        "Toys",
+                                        "Accessories",
+                                        "Rings",
+                                        "Mugs",
+                                        "Keychains",
+                                        "Shoes",
+                                        "Mouse Pads"
+                                    ].map((cat) => (
+                                        <Link
+                                            key={cat}
+                                            href={`/?category=${encodeURIComponent(cat)}`}
+                                            className="px-4 py-2 hover:bg-muted text-sm transition-colors"
+                                        >
+                                            {cat}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
                         <Link href="/?sort=rating" className="hover:text-primary/80 transition-colors">BEST SELLERS</Link>
                         <Link href="/?sort=price_desc" className="hover:text-primary/80 transition-colors">PREMIUM</Link>
                     </div>
@@ -53,13 +85,24 @@ export function Navbar() {
                     <div className="flex items-center gap-4">
                         {user ? (
                             <>
-                                <Link href="/cart">
-                                    <Button variant="ghost" size="icon" className="relative">
-                                        <ShoppingCart className="h-5 w-5" />
-                                        {/* TODO: Cart count badge */}
-                                    </Button>
-                                </Link>
-                                <Link href="/profile">
+                                {user.role !== 'admin' && (
+                                    <Link href="/cart">
+                                        <Button variant="ghost" size="icon" className="relative">
+                                            <ShoppingCart className="h-5 w-5" />
+                                            {/* TODO: Cart count badge */}
+                                        </Button>
+                                    </Link>
+                                )}
+
+                                {user.role === 'admin' && (
+                                    <Link href="/admin">
+                                        <Button variant="ghost" className="text-xs font-bold uppercase">
+                                            Dashboard
+                                        </Button>
+                                    </Link>
+                                )}
+
+                                <Link href={user.role === 'admin' ? "/admin/profile" : "/profile"}>
                                     <Button variant="ghost" size="icon" className="rounded-full border border-transparent hover:border-border overflow-hidden">
                                         {user.imageUrl ? (
                                             <img src={user.imageUrl} alt={user.username} className="h-full w-full object-cover" />

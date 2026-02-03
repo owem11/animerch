@@ -633,7 +633,7 @@ export default function AdminProductsPage() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4">
+                        <div className="grid grid-cols-3 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="edit-selling">Selling Price (₹)</Label>
                                 <Input
@@ -643,26 +643,6 @@ export default function AdminProductsPage() {
                                     onChange={(e) => setEditSellingPrice(e.target.value)}
                                 />
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-sizes">Available Sizes</Label>
-                                <Input
-                                    id="edit-sizes"
-                                    value={editAvailableSizes}
-                                    onChange={(e) => setEditAvailableSizes(e.target.value)}
-                                    placeholder="e.g. S, M, L, XL"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-colors">Available Colors</Label>
-                                <Input
-                                    id="edit-colors"
-                                    value={editAvailableColors}
-                                    onChange={(e) => setEditAvailableColors(e.target.value)}
-                                    placeholder="e.g. Black, White, Red"
-                                />
-                            </div>
-
                             <div className="space-y-2">
                                 <Label htmlFor="edit-cost">Cost Price (₹)</Label>
                                 <Input
@@ -679,6 +659,27 @@ export default function AdminProductsPage() {
                                     type="number"
                                     value={editStock}
                                     onChange={(e) => setEditStock(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-sizes">Available Sizes</Label>
+                                <Input
+                                    id="edit-sizes"
+                                    value={editAvailableSizes}
+                                    onChange={(e) => setEditAvailableSizes(e.target.value)}
+                                    placeholder="e.g. S, M, L, XL"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-colors">Available Colors</Label>
+                                <Input
+                                    id="edit-colors"
+                                    value={editAvailableColors}
+                                    onChange={(e) => setEditAvailableColors(e.target.value)}
+                                    placeholder="e.g. Black, White, Red"
                                 />
                             </div>
                         </div>

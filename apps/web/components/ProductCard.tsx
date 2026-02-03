@@ -34,7 +34,7 @@ export function ProductCard({ id, title, price, imageUrl, category, rating }: Pr
                         {title}
                     </h3>
                     <div className="mt-auto pt-2 flex items-center justify-between">
-                        <span className="text-xl font-bold">${Number(price).toFixed(2)}</span>
+                        <span className="text-xl font-bold">₹{Number(price).toFixed(2)}</span>
                         <span className="text-xs font-medium text-primary underline underline-offset-4 opacity-0 group-hover:opacity-100 transition-opacity">
                             View Details
                         </span>

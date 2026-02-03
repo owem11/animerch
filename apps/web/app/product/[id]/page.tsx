@@ -6,7 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getProduct(id: string) {
-    const res = await fetch(`http://localhost:3001/api/products/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001"}/api/products/${id}`, {
         cache: "no-store",
     });
     if (!res.ok) return null;
@@ -54,7 +54,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
                         </h1>
 
                         <p className="text-3xl font-bold">
-                            ${Number(product.price).toFixed(2)}
+                            ₹{Number(product.sellingPrice).toFixed(2)}
                         </p>
                     </div>
 
@@ -63,17 +63,37 @@ export default async function ProductPage({ params }: { params: { id: string } }
                     </div>
 
                     <div className="space-y-4 pt-6 border-t">
-                        <div className="flex gap-4">
-                            <div className="w-24">
-                                <label className="text-xs font-medium uppercase text-muted-foreground mb-1 block">Size</label>
-                                <div className="h-10 border rounded-md flex items-center justify-center font-medium bg-muted/50">
-                                    {product.size || "OS"}
+                        <div className="flex flex-row gap-6">
+                            <div className="w-auto">
+                                <label className="text-xs font-medium uppercase text-muted-foreground mb-2 block">Size</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.availableSizes ? (
+                                        product.availableSizes.split(",").map((size: string) => (
+                                            <div key={size} className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                                {size.trim()}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                            One Size
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            <div className="w-24">
-                                <label className="text-xs font-medium uppercase text-muted-foreground mb-1 block">Color</label>
-                                <div className="h-10 border rounded-md flex items-center justify-center font-medium bg-muted/50">
-                                    {product.color || "N/A"}
+                            <div className="w-auto">
+                                <label className="text-xs font-medium uppercase text-muted-foreground mb-2 block">Color</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.availableColors ? (
+                                        product.availableColors.split(",").map((color: string) => (
+                                            <div key={color} className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                                {color.trim()}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                            Standard
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 interface Product {
     id: number;
     title: string;
-    price: string;
+    sellingPrice: string;
     description: string;
     category: string;
     rating: string;
@@ -24,7 +24,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
         <div className="space-y-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {displayedProducts.map((product) => (
-                    <ProductCard key={product.id} {...product} />
+                    <ProductCard key={product.id} {...product} price={product.sellingPrice} />
                 ))}
             </div>
 

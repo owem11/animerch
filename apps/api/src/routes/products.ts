@@ -26,9 +26,9 @@ router.get("/", async (req: Request, res: Response) => {
         }
 
         if (sort === "price_desc") {
-            query = query.orderBy(desc(products.price));
+            query = query.orderBy(desc(products.sellingPrice));
         } else if (sort === "price_asc") {
-            query = query.orderBy(asc(products.price));
+            query = query.orderBy(asc(products.sellingPrice));
         } else if (sort === "rating") {
             query = query.orderBy(desc(products.rating));
         } else {
@@ -41,7 +41,11 @@ router.get("/", async (req: Request, res: Response) => {
         }
 
         const results = await query;
-        res.json({ count: results.length, data: results });
+        const safeResults = results.map(p => {
+            const { costPrice, ...rest } = p;
+            return rest;
+        });
+        res.json({ count: safeResults.length, data: safeResults });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to fetch products" });
@@ -67,7 +71,8 @@ router.get("/:id", async (req: Request, res: Response) => {
         if (result.length === 0) {
             return res.status(404).json({ error: "Product not found" });
         }
-        res.json(result[0]);
+        const { costPrice, ...publicData } = result[0];
+        res.json(publicData);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch product" });
     }
