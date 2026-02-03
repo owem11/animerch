@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import Link from "next/link";
+import { ProductItemCard } from "@/components/ProductItemCard";
 
 interface OrderItem {
     id: number;
@@ -161,22 +162,13 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
                                 <div className="space-y-4 mt-4 bg-muted/20 p-4 rounded-lg">
                                     {order.items.map((item) => (
                                         <div key={item.id} className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <Link href={`/product/${item.productId}`} className="h-16 w-16 bg-white rounded-md border flex-shrink-0 overflow-hidden block">
-                                                    {item.productImage && (
-                                                        <img src={item.productImage} alt={item.productTitle} className="h-full w-full object-cover hover:scale-105 transition-transform" />
-                                                    )}
-                                                </Link>
-                                                <div>
-                                                    <Link href={`/product/${item.productId}`} className="font-medium hover:text-primary transition-colors block">
-                                                        {item.productTitle}
-                                                    </Link>
-                                                    <Link href={`/product/${item.productId}`} className="text-xs font-medium text-primary underline underline-offset-4 mb-1 inline-block">
-                                                        View Details
-                                                    </Link>
-                                                    <p className="text-sm text-muted-foreground">Qty: {item.quantity} × ₹{Number(item.price).toFixed(2)}</p>
-                                                </div>
-                                            </div>
+                                            <ProductItemCard
+                                                productId={item.productId}
+                                                productTitle={item.productTitle}
+                                                productImage={item.productImage}
+                                                price={item.price}
+                                                quantity={item.quantity}
+                                            />
 
                                             {/* Rating */}
                                             <div className="flex items-center gap-2">
