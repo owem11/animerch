@@ -12,7 +12,7 @@ const generateImageWithNanoBananaPro = async (prompt: string): Promise<string | 
         if (!apiKey) return null;
 
         // Try the Generative Language API endpoint for Imagen 3
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -54,23 +54,23 @@ export const generateImageFromDescription = async (title: string, description: s
     try {
         console.log(`Generating image for: ${title}`);
 
-        // Simplified Prompt for Pollinations
-        // using just title and "anime style" ensuring it finds something relevant.
-        const basePrompt = `${title} anime style high quality detailed`;
-        const encodedPrompt = encodeURIComponent(basePrompt);
+        // Build a detailed prompt for better image generation
+        const prompt = `High quality anime style merchandise product image: ${title}. ${description || ''} Professional product photography, centered composition, clean background.`;
 
-        // Random seed to ensure different images
-        const seed = Math.floor(Math.random() * 10000);
+        // Try Gemini Imagen 3 API
+        const imageUrl = await generateImageWithNanoBananaPro(prompt);
 
-        // Using 'flux' as it generally yields better results for "anime" style
-        // but 'turbo' is safer if 'flux' is timing out. Let's try turbo first as it is lightning fast.
-        const imageUrl = `https://pollinations.ai/p/${encodedPrompt}?width=800&height=800&model=turbo&seed=${seed}`;
+        if (imageUrl) {
+            console.log("Generated image with Gemini Imagen 3");
+            return imageUrl;
+        }
 
-        console.log("Generated Pollinations URL:", imageUrl);
-        return imageUrl;
+        // If Imagen 3 fails, return error
+        console.error("Gemini Imagen 3 API failed - check your GEMINI_API_KEY");
+        throw new Error("Image generation failed - API key may be invalid or Imagen 3 access not enabled");
     } catch (error) {
         console.error("AI Generation Error:", error);
-        // Fallback
-        return `https://pollinations.ai/p/${encodeURIComponent(title)}?width=800&height=800&model=turbo`;
+        throw error;
     }
 };
+
