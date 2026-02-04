@@ -53,50 +53,52 @@ function LoginForm() {
     };
 
     return (
-        <div className="container max-w-md py-20">
-            <h1 className="text-3xl font-black uppercase mb-8 text-center">Login</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {successMessage && <div className="text-green-600 bg-green-50 p-3 rounded text-sm font-medium text-center">{successMessage}</div>}
-                {error && <div className="text-destructive text-sm font-medium">{error}</div>}
+        <div className="container max-w-md py-12 md:py-20 px-6">
+            <h1 className="text-2xl md:text-3xl font-black uppercase mb-8 text-center tracking-tighter">Login</h1>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                {successMessage && <div className="text-green-600 bg-green-50 border border-green-100 p-4 rounded-lg text-xs md:text-sm font-medium text-center">{successMessage}</div>}
+                {error && <div className="text-destructive text-xs md:text-sm font-medium bg-destructive/5 p-4 rounded-lg border border-destructive/10">{error}</div>}
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Email</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email</label>
                     <Input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        className="h-12 bg-muted/20"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Password</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password</label>
                     <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        className="h-12 bg-muted/20"
                     />
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full h-12 text-xs font-black tracking-widest uppercase">
                     {isAdmin ? "Log In as Admin" : "Log In"}
                 </Button>
 
-                <div className="text-center mt-4">
+                <div className="text-center mt-6">
                     <button
                         type="button"
                         onClick={() => setIsAdmin(!isAdmin)}
-                        className="text-sm text-muted-foreground hover:text-primary underline"
+                        className="text-xs text-muted-foreground hover:text-primary underline underline-offset-4 decoration-border"
                     >
-                        {isAdmin ? "Not an admin? Go to User Login" : "Are you an admin? Login here"}
+                        {isAdmin ? "Standard User Login" : "Admin Login Portal"}
                     </button>
                 </div>
 
                 {!isAdmin && (
-                    <p className="text-center text-sm text-muted-foreground mt-2">
-                        Don't have an account?{" "}
-                        <Link href="/signup" className="text-primary hover:underline">
+                    <p className="text-center text-xs text-muted-foreground mt-4">
+                        Don&apos;t have an account?{" "}
+                        <Link href="/signup" className="text-primary font-bold hover:underline">
                             Sign up
                         </Link>
                     </p>

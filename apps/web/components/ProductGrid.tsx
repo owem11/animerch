@@ -23,19 +23,19 @@ export function ProductGrid({ products }: { products: Product[] }) {
     return (
         <div className="space-y-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {displayedProducts.map((product) => (
-                    <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                {displayedProducts.map((product, index) => (
+                    <ProductCard key={product.id} {...product} price={product.sellingPrice} index={index} />
                 ))}
             </div>
 
             {products.length > initialCount && (
                 <div className="flex justify-center relative">
-                    <div className="absolute inset-x-0 h-px top-1/2 bg-gradient-to-r from-transparent via-border to-transparent" />
+                    <div className="absolute inset-x-0 h-px top-1/2 bg-gradient-to-r from-transparent via-border to-transparent [.theme-retro_&]:bg-black" />
                     <Button
                         variant="outline"
                         size="lg"
                         onClick={() => setShowAll(!showAll)}
-                        className="group relative bg-background border-primary/20 hover:border-primary px-8 rounded-full"
+                        className="group relative bg-background border-primary/20 hover:border-primary px-8 rounded-full view-all-button"
                     >
                         {showAll ? (
                             <span className="flex items-center gap-2">Show Less <ChevronUp className="h-4 w-4" /></span>

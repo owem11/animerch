@@ -22,14 +22,14 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
     return (
         <div className="min-h-screen cyber-grid">
-            <div className="container py-12">
-                <Link href="/" className="text-sm text-muted-foreground hover:text-foreground mb-8 block">
+            <div className="container py-6 md:py-12">
+                <Link href="/" className="text-xs md:text-sm text-muted-foreground hover:text-foreground mb-6 md:mb-8 block">
                     ← Back to Products
                 </Link>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20">
                     {/* Image Section */}
-                    <div className="relative aspect-square bg-muted rounded-2xl overflow-hidden border">
+                    <div className="relative aspect-square bg-muted rounded-xl md:rounded-2xl overflow-hidden border">
                         <img
                             src={product.imageUrl || "https://placehold.co/600"}
                             alt={product.title}
@@ -50,11 +50,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
                                 </div>
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-tight">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter leading-tight uppercase">
                                 {product.title}
                             </h1>
 
-                            <p className="text-3xl font-bold">
+                            <p className="text-2xl md:text-3xl font-bold">
                                 ₹{Number(product.sellingPrice).toFixed(2)}
                             </p>
                         </div>
@@ -63,35 +63,35 @@ export default async function ProductPage({ params }: { params: { id: string } }
                             <p>{product.description}</p>
                         </div>
 
-                        <div className="space-y-4 pt-6 border-t">
-                            <div className="flex flex-row gap-6">
-                                <div className="w-auto">
-                                    <label className="text-xs font-medium uppercase text-muted-foreground mb-2 block">Size</label>
+                        <div className="space-y-6 pt-6 border-t">
+                            <div className="flex flex-col sm:flex-row gap-6">
+                                <div className="w-full sm:w-auto">
+                                    <label className="text-[10px] font-black uppercase text-muted-foreground mb-3 block tracking-widest">Select Size</label>
                                     <div className="flex flex-wrap gap-2">
                                         {product.availableSizes ? (
                                             product.availableSizes.split(",").map((size: string) => (
-                                                <div key={size} className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                                <div key={size} className="h-10 min-w-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/30 text-xs hover:border-primary transition-colors cursor-pointer">
                                                     {size.trim()}
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                            <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/30 text-xs">
                                                 One Size
                                             </div>
                                         )}
                                     </div>
                                 </div>
-                                <div className="w-auto">
-                                    <label className="text-xs font-medium uppercase text-muted-foreground mb-2 block">Color</label>
+                                <div className="w-full sm:w-auto">
+                                    <label className="text-[10px] font-black uppercase text-muted-foreground mb-3 block tracking-widest">Available Colors</label>
                                     <div className="flex flex-wrap gap-2">
                                         {product.availableColors ? (
                                             product.availableColors.split(",").map((color: string) => (
-                                                <div key={color} className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                                <div key={color} className="h-10 min-w-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/30 text-xs hover:border-primary transition-colors cursor-pointer">
                                                     {color.trim()}
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/50 text-sm">
+                                            <div className="h-10 px-4 border rounded-md flex items-center justify-center font-medium bg-muted/30 text-xs">
                                                 Standard
                                             </div>
                                         )}
@@ -99,9 +99,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
                                 </div>
                             </div>
 
-                            <div className="flex gap-4 pt-4">
-                                <AddToCartButton productId={product.id} />
-                                <Button variant="outline" size="lg">Wishlist</Button>
+                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                <div className="flex-1">
+                                    <AddToCartButton productId={product.id} />
+                                </div>
+                                <Button variant="outline" size="lg" className="sm:w-auto w-full">Wishlist</Button>
                             </div>
                         </div>
                     </div>

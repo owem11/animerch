@@ -57,60 +57,66 @@ export default function AdminUsersPage() {
     if (loading || authLoading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin" /></div>;
 
     return (
-        <div className="min-h-screen bg-gray-50/50">
-            <div className="container mx-auto py-10">
-                <div className="mb-6">
-                    <Link href="/admin" className="text-sm text-muted-foreground hover:text-primary flex items-center mb-2">
-                        <ArrowLeft className="h-4 w-4 mr-1" /> Back to Dashboard
-                    </Link>
-                    <div className="flex justify-between items-end">
-                        <h1 className="text-3xl font-bold">Manage Users</h1>
-                        <div className="relative w-72">
-                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search users..."
-                                className="pl-8"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                        </div>
+        <div className="min-h-screen cyber-grid">
+            <div className="container mx-auto py-10 px-6">
+                <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                    <div>
+                        <Link href="/admin" className="text-muted-foreground hover:text-foreground text-[10px] items-center mb-2 uppercase tracking-widest font-bold hidden sm:flex">
+                            <ArrowLeft className="h-3 w-3 mr-1" /> Dashboard
+                        </Link>
+                        <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Manage Users</h1>
+                    </div>
+                    <div className="relative w-full sm:w-72">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search users..."
+                            className="pl-10 h-11 bg-muted/20"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </div>
                 </div>
 
-                <div className="rounded-md border bg-card">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="border-b bg-muted/50 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">ID</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Username</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Role</th>
-                                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Joined</th>
-                                <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredUsers.map((u) => (
-                                <tr key={u.id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                    <td className="p-4 align-middle">{u.id}</td>
-                                    <td className="p-4 align-middle font-medium">{u.username}</td>
-                                    <td className="p-4 align-middle">{u.email}</td>
-                                    <td className="p-4 align-middle capitalize">{u.role}</td>
-                                    <td className="p-4 align-middle">{new Date(u.createdAt).toLocaleDateString()}</td>
-                                    <td className="p-4 align-middle text-right">
-                                        <Link href={`/admin/users/${u.id}`} className="text-primary hover:underline font-medium">
-                                            View Details
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filteredUsers.length === 0 && (
+                <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                    <div className="relative w-full overflow-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-xs uppercase bg-muted/50 text-muted-foreground">
                                 <tr>
-                                    <td colSpan={6} className="p-8 text-center text-muted-foreground">No users found</td>
+                                    <th className="px-6 py-4 font-black tracking-widest">ID</th>
+                                    <th className="px-6 py-4 font-black tracking-widest">User</th>
+                                    <th className="px-6 py-4 font-black tracking-widest">Email</th>
+                                    <th className="px-6 py-4 font-black tracking-widest">Role</th>
+                                    <th className="px-6 py-4 font-black tracking-widest">Joined</th>
+                                    <th className="px-6 py-4 text-right font-black tracking-widest">Action</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filteredUsers.map((u) => (
+                                    <tr key={u.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors">
+                                        <td className="px-6 py-4 text-muted-foreground">#{u.id}</td>
+                                        <td className="px-6 py-4 font-bold tracking-tight">{u.username}</td>
+                                        <td className="px-6 py-4 text-xs font-medium">{u.email}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${u.role === 'admin' ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                                                {u.role}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-muted-foreground text-xs uppercase font-bold">{new Date(u.createdAt).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 text-right">
+                                            <Link href={`/admin/users/${u.id}`} className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                                                DETAILS
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filteredUsers.length === 0 && (
+                                    <tr>
+                                        <td colSpan={6} className="p-12 text-center text-muted-foreground font-bold tracking-widest uppercase text-xs">No users found</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

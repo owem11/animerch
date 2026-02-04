@@ -125,11 +125,26 @@ body {
 
   /* ORBITRON FONT FOR CYBER THEME */
   font-family: "Orbitron", "Century Gothic", sans-serif !important;
+
+  /* Global Cyber Colors */
+  --cyber-cyan: 186 100% 50%;
+  --cyber-magenta: 326 100% 60%;
+}
+
+/* ===== CYBER GRID UTILITY ===== */
+.theme-cyber .cyber-grid {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.1) 1px, transparent 1px) !important;
+  background-size: 50px 50px !important;
+  background-attachment: fixed !important;
 }
 
 /* ===== RETRO THEME (VESPER CLONE) ===== */
 .theme-retro {
-  --background: 38 46% 91% !important;
+  --background: 35 63% 93% !important;
+  /* #F9EFE1 */
   --foreground: 0 0% 0% !important;
   --card: 0 0% 100% !important;
   --card-foreground: 0 0% 0% !important;
@@ -148,11 +163,58 @@ body {
   --ring: 0 0% 0% !important;
   --radius: 2rem;
 
-  background-color: hsl(38 46% 91%) !important;
-  color: hsl(0 0% 0%) !important;
+  /* Custom Palette for Retro Cards */
+  --card-yellow: #FACD55;
+  --card-mint: #72E1B1;
+  --card-pink: #F7889F;
+  --card-blue: #7BDBFF;
+  --card-magenta: #E354A8;
+  --card-purple: #CEB1F2;
 
-  /* Century Gothic for Retro (same as default) */
+  /* Footer & Button Colors */
+  --footer-orange: #FF4F08;
+  --button-lavender: #FDC3F2;
+
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
   font-family: "Century Gothic", "Futura", sans-serif !important;
+}
+
+/* Specific class for random navbar color, injected via JS */
+.theme-retro nav.random-nav-bg {
+  background-color: var(--nav-bg-color) !important;
+  border-bottom: 2px solid black !important;
+}
+
+/* RETRO FOOTER OVERRIDE */
+.theme-retro footer {
+  background-color: var(--footer-orange) !important;
+  color: white !important;
+  border-top: 2px solid black !important;
+}
+
+.theme-retro footer * {
+  color: white !important;
+}
+
+.theme-retro footer .border-t {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* RETRO VIEW ALL BUTTONS */
+.theme-retro .view-all-button {
+  background-color: var(--button-lavender) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+  transition: all 0.2s ease;
+}
+
+.theme-retro .view-all-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1) !important;
+  background-color: var(--card-yellow) !important;
+  /* Different color on hover */
 }
 
 /* RETRO THEME DROPDOWN STYLES */
@@ -178,39 +240,198 @@ body {
   color: black !important;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+/* RETRO ADMIN DASHBOARD STATS */
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:nth-child(1) {
+  background-color: var(--card-yellow) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px black !important;
 }
 
-/* ===== CYBER GRID BACKGROUND - ONLY VISIBLE IN CYBER THEME ===== */
-/* Grid is invisible by default */
-.cyber-grid {
-  background-image: none;
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:nth-child(2) {
+  background-color: var(--card-mint) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px black !important;
 }
 
-/* Grid pattern only shows when Cyber theme is active */
-body.theme-cyber .cyber-grid,
-html.theme-cyber .cyber-grid {
-  background-image:
-    linear-gradient(to right, rgba(0, 229, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 229, 255, 0.1) 1px, transparent 1px) !important;
-  background-size: 50px 50px !important;
-  background-attachment: fixed !important;
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:nth-child(3) {
+  background-color: var(--card-pink) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px black !important;
+}
+
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:nth-child(4) {
+  background-color: var(--card-blue) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px black !important;
+}
+
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:nth-child(5) {
+  background-color: var(--card-magenta) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  box-shadow: 4px 4px 0px 0px black !important;
+}
+
+/* Ensure stats text contrast */
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div * {
+  color: black !important;
+}
+
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div {
+  transition: all 0.2s ease !important;
+}
+
+.theme-retro div.grid.md\:grid-cols-2.lg\:grid-cols-5>div:hover {
+  transform: translate(-4px, -4px) !important;
+  box-shadow: 8px 8px 0px 0px black !important;
+}
+
+/* RETRO TABLES */
+.theme-retro thead {
+  background-color: var(--card-purple) !important;
+  color: black !important;
+  border-bottom: 2px solid black !important;
+}
+
+.theme-retro thead th {
+  color: black !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-retro tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* RETRO FORMS & DIALOGS */
+.theme-retro [data-state="open"] [role="dialog"],
+.theme-retro div[class*="DialogContent"] {
+  background-color: #F9EFE1 !important;
+  border: 3px solid black !important;
+  border-radius: 0 !important;
+  box-shadow: 10px 10px 0px 0px rgba(0, 0, 0, 1) !important;
+}
+
+/* RETRO INTERACTIVE REFINEMENTS */
+.theme-retro .nav-link:hover,
+.theme-retro .category-item:hover,
+.theme-retro button.flex.items-center.gap-1:hover {
+  color: black !important;
+}
+
+.theme-retro .category-item {
+  margin-left: 0.25rem !important;
+  margin-right: 0.25rem !important;
+  border-radius: 0.375rem !important;
+}
+
+.theme-retro label {
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 0.75rem !important;
+  color: black !important;
+}
+
+.theme-retro input,
+.theme-retro select,
+.theme-retro textarea {
+  background-color: white !important;
+  border: 2px solid black !important;
+  border-radius: 0 !important;
+  color: black !important;
+}
+
+.theme-retro .bg-primary {
+  background-color: var(--footer-orange) !important;
+  color: white !important;
+  border: 2px solid black !important;
+  border-radius: 9999px !important;
+  font-weight: 900 !important;
+  box-shadow: 4px 4px 0px 0px black !important;
+}
+
+.theme-retro .bg-secondary {
+  background-color: var(--card-blue) !important;
+  color: black !important;
+  border: 2px solid black !important;
+  border-radius: 9999px !important;
+  font-weight: 900 !important;
+  box-shadow: 4px 4px 0px 0px black !important;
+}
+
+/* CYBER DIALOG FIX: Ensure visibility over background grid */
+.theme-cyber [role="dialog"],
+.theme-cyber div[class*="DialogContent"] {
+  background-color: #0d0221 !important;
+  /* Solid dark background */
+  border: 2px solid var(--cyber-cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4) !important;
+}
+
+/* GLOBAL INTERACTIVE EFFECTS */
+button,
+a,
+.cursor-pointer,
+[role="button"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default Hover */
+button:hover,
+[role="button"]:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+/* Retro Specific Hover: "Pop-up" effect */
+.theme-retro button:hover,
+.theme-retro .bg-primary:hover,
+.theme-retro .bg-secondary:hover {
+  transform: translate(-3px, -3px) !important;
+  box-shadow: 7px 7px 0px 0px black !important;
+  filter: none !important;
+}
+
+.theme-retro button:active {
+  transform: translate(0, 0) !important;
+  box-shadow: 2px 2px 0px 0px black !important;
+}
+
+/* Cyber Specific Hover: Glow & Magenta accent */
+.theme-cyber button:hover {
+  border-color: var(--cyber-magenta) !important;
+  box-shadow: 0 0 15px var(--cyber-cyan), 0 0 5px var(--cyber-magenta) !important;
+  color: var(--cyber-cyan) !important;
+  transform: scale(1.03) !important;
+}
+
+.theme-cyber button.bg-primary:hover {
+  background-color: var(--cyber-magenta) !important;
+  color: white !important;
 }
 
 /* CYBER THEME: Make all content areas transparent so grid shows through */
-body.theme-cyber,
-body.theme-cyber main,
-body.theme-cyber .container,
-body.theme-cyber [class*="bg-background"] {
+.theme-cyber,
+.theme-cyber body,
+.theme-cyber main,
+.theme-cyber .container,
+.theme-cyber [class*="bg-background"],
+.theme-cyber .bg-card {
   background-color: transparent !important;
+}
+
+/* Solid background for specific components that need readability */
+.theme-cyber .bg-card,
+.theme-cyber .bg-popover,
+.theme-cyber [role="dialog"],
+.theme-cyber div[class*="DialogContent"] {
+  background-color: hsl(220 27% 6% / 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
 /* CYBER THEME: Fixed grid overlay covering EVERYTHING */

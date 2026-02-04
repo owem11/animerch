@@ -82,18 +82,18 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
         return (
             <div className="container py-8">
                 <section className="space-y-6">
-                    <div className="flex items-end justify-between border-b pb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b pb-4 gap-4">
                         <div>
-                            <h2 className="text-3xl font-black tracking-tighter uppercase">
+                            <h2 className="text-xl md:text-3xl font-black tracking-tighter uppercase">
                                 {searchParams.search ? `Results for "${searchParams.search}"` :
                                     searchParams.category ? `${searchParams.category}` : "Products"}
                             </h2>
-                            <p className="text-muted-foreground text-sm mt-1">
+                            <p className="text-muted-foreground text-xs md:text-sm mt-1">
                                 {productsData.count} items found
                             </p>
                         </div>
                         <Link href="/">
-                            <Button variant="ghost">Clear Filters</Button>
+                            <Button variant="ghost" size="sm" className="w-fit">Clear Filters</Button>
                         </Link>
                     </div>
 
@@ -124,15 +124,15 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 {/* Recommended Section */}
                 <section className="space-y-10">
                     <div className="flex items-center gap-4 mb-2">
-                        <div className="h-[2px] w-12 bg-primary" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Editor&apos;s Picks</span>
+                        <div className="h-[2px] w-8 md:w-12 bg-primary" />
+                        <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Editor&apos;s Picks</span>
                     </div>
                     <div className="flex items-end justify-between border-b border-border/40 pb-6">
-                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Recommended</h2>
+                        <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-[-0.04em] uppercase">Recommended</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                        {recommendedData.data.map((product: Product) => (
-                            <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                        {recommendedData.data.map((product: Product, index: number) => (
+                            <ProductCard key={product.id} {...product} price={product.sellingPrice} index={index} />
                         ))}
                     </div>
                 </section>
@@ -140,16 +140,16 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 {/* New Arrivals Section */}
                 <section className="space-y-10">
                     <div className="flex items-center gap-4 mb-2">
-                        <div className="h-[2px] w-12 bg-primary" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Just Dropped</span>
+                        <div className="h-[2px] w-8 md:w-12 bg-primary" />
+                        <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Just Dropped</span>
                     </div>
                     <div className="flex items-end justify-between border-b border-border/40 pb-6">
-                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">New Arrivals</h2>
+                        <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-[-0.04em] uppercase">New Arrivals</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                         {newArrivalsData.data.length > 0 ? (
-                            newArrivalsData.data.map((product: Product) => (
-                                <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                            newArrivalsData.data.map((product: Product, index: number) => (
+                                <ProductCard key={product.id} {...product} price={product.sellingPrice} index={index} />
                             ))
                         ) : (
                             <div className="col-span-full py-10 text-center text-muted-foreground">
@@ -162,15 +162,15 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 {/* Most Bought / Trending Section */}
                 <section className="space-y-10">
                     <div className="flex items-center gap-4 mb-2">
-                        <div className="h-[2px] w-12 bg-primary" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Trending Now</span>
+                        <div className="h-[2px] w-8 md:w-12 bg-primary" />
+                        <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">Trending Now</span>
                     </div>
                     <div className="flex items-end justify-between border-b border-border/40 pb-6">
-                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Most Bought</h2>
+                        <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-[-0.04em] uppercase">Most Bought</h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                        {mostBoughtData.data.map((product: Product) => (
-                            <ProductCard key={product.id} {...product} price={product.sellingPrice} />
+                        {mostBoughtData.data.map((product: Product, index: number) => (
+                            <ProductCard key={product.id} {...product} price={product.sellingPrice} index={index} />
                         ))}
                     </div>
                 </section>
@@ -178,8 +178,8 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
                 {/* All Products with Dropbar/Collapse */}
                 <section className="space-y-10">
                     <div className="flex items-end justify-between border-b border-border/40 pb-6">
-                        <h2 className="text-7xl font-heading font-black tracking-[-0.04em] uppercase">Collections</h2>
-                        <p className="text-muted-foreground font-black text-xs tracking-widest">{productsData.count} ITEMS</p>
+                        <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black tracking-[-0.04em] uppercase">Collections</h2>
+                        <p className="hidden md:block text-muted-foreground font-black text-xs tracking-widest">{productsData.count} ITEMS</p>
                     </div>
 
                     <ProductGrid products={productsData.data} />

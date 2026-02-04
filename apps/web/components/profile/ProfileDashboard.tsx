@@ -78,8 +78,8 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border rounded-xl bg-card shadow-sm">
 
                 {/* Avatar Section */}
-                <div className="flex flex-col items-center justify-center space-y-4 md:border-r border-border/50 pr-6">
-                    <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-background ring-2 ring-primary/20 shadow-xl">
+                <div className="flex flex-col items-center justify-center space-y-4 md:border-r border-border/50 md:pr-6 pb-6 md:pb-0">
+                    <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border-2 md:border-4 border-background ring-2 ring-primary/20 shadow-xl">
                         <img
                             src={user?.imageUrl || "https://placehold.co/200?text=USER"}
                             alt={user?.username}
@@ -87,8 +87,8 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
                         />
                     </div>
                     <div className="text-center">
-                        <h2 className="text-2xl font-black uppercase tracking-tight">{user?.username || "Anime Fan"}</h2>
-                        <Badge variant="secondary" className="mt-2 uppercase text-[10px] tracking-widest font-bold">
+                        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">{user?.username || "Anime Fan"}</h2>
+                        <Badge variant="secondary" className="mt-2 uppercase text-[9px] md:text-[10px] tracking-widest font-bold">
                             {user?.role || "Member"}
                         </Badge>
                     </div>
@@ -117,8 +117,8 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
                         </div>
                     </div>
 
-                    <div className="mt-8 flex justify-end">
-                        <Button onClick={onEdit} className="gap-2">
+                    <div className="mt-6 md:mt-8 flex justify-center md:justify-end">
+                        <Button onClick={onEdit} className="w-full md:w-auto gap-2">
                             <Edit className="h-4 w-4" /> Edit Profile
                         </Button>
                     </div>
@@ -171,18 +171,20 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
                                             />
 
                                             {/* Rating */}
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs font-bold uppercase text-muted-foreground mr-2">Rate:</span>
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <button
-                                                        key={star}
-                                                        onClick={() => handleRate(item.productId, star)}
-                                                        className={`focus:outline-none transition-colors ${(ratings[item.productId] || 0) >= star ? "text-yellow-400" : "text-gray-300 hover:text-yellow-200"
-                                                            }`}
-                                                    >
-                                                        <Star className="h-5 w-5 fill-current" />
-                                                    </button>
-                                                ))}
+                                            <div className="flex flex-col gap-2 items-start sm:items-end mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-none w-full sm:w-auto">
+                                                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Rate Item</span>
+                                                <div className="flex items-center gap-1.5">
+                                                    {[1, 2, 3, 4, 5].map((star) => (
+                                                        <button
+                                                            key={star}
+                                                            onClick={() => handleRate(item.productId, star)}
+                                                            className={`focus:outline-none transition-transform hover:scale-125 ${(ratings[item.productId] || 0) >= star ? "text-yellow-400" : "text-gray-300 hover:text-yellow-200"
+                                                                }`}
+                                                        >
+                                                            <Star className="h-5 w-5 md:h-6 md:w-6 fill-current" />
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

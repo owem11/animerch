@@ -56,47 +56,50 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="container max-w-md py-20">
-            <h1 className="text-3xl font-black uppercase mb-8 text-center">Create Account</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && <div className="text-destructive text-sm font-medium">{error}</div>}
+        <div className="container max-w-md py-12 md:py-20 px-6">
+            <h1 className="text-2xl md:text-3xl font-black uppercase mb-8 text-center tracking-tighter">Create Account</h1>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                {error && <div className="text-destructive text-xs md:text-sm font-medium bg-destructive/5 p-4 rounded-lg border border-destructive/10">{error}</div>}
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Username</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Username</label>
                     <Input
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="OtakuKing99"
+                        className="h-12 bg-muted/20"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Email</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email</label>
                     <Input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        className="h-12 bg-muted/20"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Password</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password</label>
                     <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        className="h-12 bg-muted/20"
                     />
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full h-12 text-xs font-black tracking-widest uppercase">
                     Sign Up
                 </Button>
 
-                <p className="text-center text-sm text-muted-foreground mt-4">
+                <p className="text-center text-xs text-muted-foreground mt-6">
                     Already have an account?{" "}
-                    <Link href="/login" className="text-primary hover:underline">
+                    <Link href="/login" className="text-primary font-bold hover:underline">
                         Log in
                     </Link>
                 </p>

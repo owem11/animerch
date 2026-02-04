@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Search, Package, ChevronsUpDown, ChevronUp, ChevronDown, Plus, Upload, Wand2, Image as ImageIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -38,6 +39,7 @@ import { Label } from "@/components/ui/label";
 
 export default function AdminProductsPage() {
     const { user, isLoading: authLoading } = useAuth();
+    const { theme } = useTheme();
     const router = useRouter();
     const [products, setProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -413,42 +415,43 @@ export default function AdminProductsPage() {
     return (
         <div className="min-h-screen cyber-grid">
             <div className="w-full max-w-[1600px] mx-auto px-8 py-8">
-                <div className="mb-8 flex items-center justify-between">
+                <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
-                        <Link href="/admin" className="text-muted-foreground hover:text-foreground text-sm flex items-center mb-2">
-                            <ArrowLeft className="h-4 w-4 mr-1" /> Back to Dashboard
+                        <Link href="/admin" className="text-muted-foreground hover:text-foreground text-[10px] items-center mb-2 uppercase tracking-widest font-bold hidden sm:flex">
+                            <ArrowLeft className="h-3 w-3 mr-1" /> Dashboard
                         </Link>
-                        <h1 className="text-3xl font-bold tracking-tight">Inventory Management</h1>
+                        <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Inventory</h1>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                             variant={isSelectionMode ? "destructive" : "default"}
                             onClick={handleBulkDelete}
+                            className="flex-1 sm:flex-none h-11 text-[10px] font-black uppercase tracking-widest"
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            {isSelectionMode ? (selectedIds.length > 0 ? `Delete Items (${selectedIds.length})` : "Cancel Selection") : "Delete"}
+                            {isSelectionMode ? (selectedIds.length > 0 ? `Delete (${selectedIds.length})` : "Cancel") : "Delete"}
                         </Button>
 
-                        <Button onClick={() => setIsAddDialogOpen(true)}>
+                        <Button onClick={() => setIsAddDialogOpen(true)} className="flex-1 sm:flex-none h-11 text-[10px] font-black uppercase tracking-widest">
                             <Plus className="mr-2 h-4 w-4" /> Add Item
                         </Button>
                     </div>
                 </div>
 
                 <div className="rounded-xl border bg-card text-card-foreground shadow">
-                    <div className="p-6 border-b flex items-center justify-between gap-4">
-                        <div className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <div className="p-4 md:p-6 border-b flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="relative w-full sm:max-w-sm">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder="Search products..."
-                                className="pl-9"
+                                className="pl-10 h-11 bg-muted/20"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
-                        <div className="text-sm text-muted-foreground font-medium">
-                            Total Items: {filteredProducts.length}
+                        <div className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+                            Total: {filteredProducts.length} items
                         </div>
                     </div>
 
@@ -576,186 +579,138 @@ export default function AdminProductsPage() {
 
             {/* Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Edit Product: {editProduct?.title}</DialogTitle>
-                        <DialogDescription>
-                            Update product details.
+                <DialogContent className="max-w-[95vw] md:max-w-4xl p-4 md:p-6 max-h-[90vh] overflow-y-auto">
+                    <DialogHeader className="mb-4">
+                        <DialogTitle className="text-xl md:text-2xl font-black uppercase tracking-tight">Edit: {editProduct?.title}</DialogTitle>
+                        <DialogDescription className="text-[10px] uppercase tracking-widest font-bold opacity-70">
+                            Update product inventory details.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-6 py-4">
-                        {/* Basic Info */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 py-2">
+                        {/* Left Column: Core Details */}
+                        <div className="space-y-4">
+                            <div className="space-y-1">
                                 <Label htmlFor="edit-title">Product Title</Label>
-                                <Input
-                                    id="edit-title"
-                                    value={editTitle}
-                                    onChange={(e) => setEditTitle(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-category">Category</Label>
-                                <select
-                                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={editCategory}
-                                    onChange={(e) => setEditCategory(e.target.value)}
-                                >
-                                    <option value="" disabled>Select Category</option>
-                                    {[
-                                        "Anime T-Shirt", "Hoodies", "Toys", "Accessories",
-                                        "Mugs", "Keychains", "Shoes", "Mouse Pads"
-                                    ].map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2 col-span-2">
-                                <Label htmlFor="edit-anime">Anime / Series</Label>
-                                <Input
-                                    id="edit-anime"
-                                    value={editAnime}
-                                    onChange={(e) => setEditAnime(e.target.value)}
-                                    placeholder="e.g. Naruto, One Piece"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-desc">Description</Label>
-                            <textarea
-                                id="edit-desc"
-                                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                value={editDescription}
-                                onChange={(e) => setEditDescription(e.target.value)}
-                                placeholder="Describe the product..."
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-selling">Selling Price (₹)</Label>
-                                <Input
-                                    id="edit-selling"
-                                    type="number"
-                                    value={editSellingPrice}
-                                    onChange={(e) => setEditSellingPrice(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-cost">Cost Price (₹)</Label>
-                                <Input
-                                    id="edit-cost"
-                                    type="number"
-                                    value={editCostPrice}
-                                    onChange={(e) => setEditCostPrice(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-stock">Stock Level</Label>
-                                <Input
-                                    id="edit-stock"
-                                    type="number"
-                                    value={editStock}
-                                    onChange={(e) => setEditStock(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-sizes">Available Sizes</Label>
-                                <Input
-                                    id="edit-sizes"
-                                    value={editAvailableSizes}
-                                    onChange={(e) => setEditAvailableSizes(e.target.value)}
-                                    placeholder="e.g. S, M, L, XL"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-colors">Available Colors</Label>
-                                <Input
-                                    id="edit-colors"
-                                    value={editAvailableColors}
-                                    onChange={(e) => setEditAvailableColors(e.target.value)}
-                                    placeholder="e.g. Black, White, Red"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Image Section */}
-                        <div className="space-y-4 border rounded-lg p-4 bg-muted/20">
-                            <Label className="text-base font-semibold">Product Image</Label>
-
-                            {/* Tabs (Custom) */}
-                            <div className="flex items-center gap-2 mb-4">
-                                <Button
-                                    variant={editImageTab === 'upload' ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => setEditImageTab('upload')}
-                                >
-                                    <Upload className="h-4 w-4 mr-2" /> Upload
-                                </Button>
-                                <Button
-                                    variant={editImageTab === 'ai' ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => setEditImageTab('ai')}
-                                >
-                                    <Wand2 className="h-4 w-4 mr-2" /> AI Generate
-                                </Button>
+                                <Input id="edit-title" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
                             </div>
 
-                            {editImageTab === 'upload' ? (
-                                <div className="space-y-4">
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => handleFileUpload(e, true)}
-                                    />
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-category">Category</Label>
+                                    <select
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                                        value={editCategory}
+                                        onChange={(e) => setEditCategory(e.target.value)}
+                                    >
+                                        <option value="" disabled>Select Category</option>
+                                        {["Anime T-Shirt", "Hoodies", "Toys", "Accessories", "Mugs", "Keychains", "Shoes", "Mouse Pads"].map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
                                 </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    <p className="text-sm text-muted-foreground">
-                                        Generate an image using AI based on the product title and description.
-                                    </p>
-                                    <Button onClick={() => handleGenerateAI(editTitle, editDescription, true)} disabled={isGenerating} className="w-full">
-                                        {isGenerating ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Wand2 className="mr-2 h-4 w-4" /> Generate Image
-                                            </>
-                                        )}
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-anime">Anime / Series</Label>
+                                    <Input id="edit-anime" value={editAnime} onChange={(e) => setEditAnime(e.target.value)} placeholder="e.g. Naruto" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <Label htmlFor="edit-desc">Description</Label>
+                                <textarea
+                                    id="edit-desc"
+                                    className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    value={editDescription}
+                                    onChange={(e) => setEditDescription(e.target.value)}
+                                    placeholder="Describe the product..."
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-selling">Selling (₹)</Label>
+                                    <Input id="edit-selling" type="number" value={editSellingPrice} onChange={(e) => setEditSellingPrice(e.target.value)} />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-cost">Cost (₹)</Label>
+                                    <Input id="edit-cost" type="number" value={editCostPrice} onChange={(e) => setEditCostPrice(e.target.value)} />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-stock">Stock</Label>
+                                    <Input id="edit-stock" type="number" value={editStock} onChange={(e) => setEditStock(e.target.value)} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Options & Media */}
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-sizes">Sizes</Label>
+                                    <Input id="edit-sizes" value={editAvailableSizes} onChange={(e) => setEditAvailableSizes(e.target.value)} placeholder="e.g. S, M, L" />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="edit-colors">Colors</Label>
+                                    <Input id="edit-colors" value={editAvailableColors} onChange={(e) => setEditAvailableColors(e.target.value)} placeholder="e.g. Black, White" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 p-3 border rounded-lg bg-muted/20">
+                                <Label className="text-xs font-black uppercase">Product Image</Label>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant={editImageTab === 'upload' ? 'default' : 'outline'}
+                                        size="sm"
+                                        className="flex-1 text-[10px]"
+                                        onClick={() => setEditImageTab('upload')}
+                                    >
+                                        <Upload className="h-3 w-3 mr-1" /> UPLOAD
+                                    </Button>
+                                    <Button
+                                        variant={editImageTab === 'ai' ? 'default' : 'outline'}
+                                        size="sm"
+                                        className={`flex-1 text-[10px] ${editImageTab === 'ai' && theme === 'retro' ? 'bg-[#72E1B1] hover:bg-[#72E1B1]/90 text-black' : ''}`}
+                                        onClick={() => setEditImageTab('ai')}
+                                    >
+                                        <Wand2 className="h-3 w-3 mr-1" /> AI GENERATE
                                     </Button>
                                 </div>
-                            )}
 
-                            {/* Preview */}
-                            {editImageUrl && (
-                                <div className="mt-4">
-                                    <p className="text-xs font-medium mb-2">Preview:</p>
-                                    <div className="h-48 w-full rounded-md border flex items-center justify-center bg-white overflow-hidden relative">
-                                        <img src={editImageUrl} alt="Preview" className="h-full object-contain" />
+                                {editImageTab === 'upload' ? (
+                                    <Input type="file" accept="image/*" className="h-9 text-xs" onChange={(e) => handleFileUpload(e, true)} />
+                                ) : (
+                                    <Button
+                                        onClick={() => handleGenerateAI(editTitle, editDescription, true)}
+                                        disabled={isGenerating}
+                                        className={`w-full h-9 text-[10px] font-black ${theme === 'retro' ? 'bg-[#72E1B1] hover:bg-[#72E1B1]/90 text-black' : ''}`}
+                                    >
+                                        {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-1" />}
+                                        {isGenerating ? "GENERATING..." : "START AI GENERATION"}
+                                    </Button>
+                                )}
+
+                                {editImageUrl && (
+                                    <div className="aspect-video w-full rounded-md border bg-white overflow-hidden relative group">
+                                        <img src={editImageUrl} alt="Preview" className="h-full w-full object-contain" />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                            <span className="text-[10px] text-white font-bold">CURRENT IMAGE</span>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter className="flex justify-between items-center sm:justify-between w-full">
-                        <Button variant="destructive" onClick={() => {
+                    <DialogFooter className="mt-6 pt-4 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <Button variant="ghost" size="sm" className="h-10 px-4 text-[10px] font-black uppercase tracking-widest text-destructive hover:bg-destructive/10 order-2 sm:order-1" onClick={() => {
                             if (editProduct && confirm("Delete " + editProduct.title + "?")) {
                                 handleDelete(editProduct.id);
                                 setIsDialogOpen(false);
                             }
-                        }}>Delete Item</Button>
-                        <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSaving}>Cancel</Button>
-                            <Button onClick={handleSave} disabled={isSaving}>
-                                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Save Changes
+                        }}>DELETE</Button>
+                        <div className="flex gap-2 w-full sm:w-auto order-1 sm:order-2">
+                            <Button variant="outline" size="sm" className="flex-1 sm:flex-none h-10 px-6 text-[10px] font-black uppercase tracking-widest" onClick={() => setIsDialogOpen(false)} disabled={isSaving}>CANCEL</Button>
+                            <Button onClick={handleSave} size="sm" className="flex-1 sm:flex-none h-10 px-8 text-[10px] font-black uppercase tracking-widest bg-primary text-white" disabled={isSaving}>
+                                {isSaving ? "SAVING..." : "SAVE"}
                             </Button>
                         </div>
                     </DialogFooter>
@@ -764,185 +719,130 @@ export default function AdminProductsPage() {
 
             {/* Add Product Dialog */}
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Add New Inventory Item</DialogTitle>
-                        <DialogDescription>
-                            Fill in the details to add a new product to the catalog.
+                <DialogContent className="max-w-[95vw] md:max-w-4xl p-4 md:p-6 max-h-[90vh] overflow-y-auto">
+                    <DialogHeader className="mb-4">
+                        <DialogTitle className="text-xl md:text-2xl font-black uppercase tracking-tight">Add Inventory</DialogTitle>
+                        <DialogDescription className="text-[10px] uppercase tracking-widest font-bold opacity-70">
+                            Enter details for the new product.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-6 py-4">
-                        {/* Basic Info */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 py-2">
+                        {/* Left Column: Core Details */}
+                        <div className="space-y-4">
+                            <div className="space-y-1">
                                 <Label htmlFor="new-title">Product Title</Label>
-                                <Input
-                                    id="new-title"
-                                    value={newProduct.title}
-                                    onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
-                                    placeholder="e.g. Naruto Headband"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="new-category">Category</Label>
-                                <select
-                                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={newProduct.category}
-                                    onChange={handleNewCategoryChange}
-                                >
-                                    <option value="" disabled>Select Category</option>
-                                    {[
-                                        "Anime T-Shirt", "Hoodies", "Toys", "Accessories",
-                                        "Mugs", "Keychains", "Shoes", "Mouse Pads"
-                                    ].map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2 col-span-2">
-                                <Label htmlFor="new-anime">Anime / Series</Label>
-                                <Input
-                                    id="new-anime"
-                                    value={newProduct.anime}
-                                    onChange={(e) => setNewProduct({ ...newProduct, anime: e.target.value })}
-                                    placeholder="e.g. Naruto, One Piece"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="new-desc">Description</Label>
-                            <textarea
-                                id="new-desc"
-                                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                value={newProduct.description}
-                                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                placeholder="Describe the product..."
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="new-selling">Selling Price (₹)</Label>
-                                <Input
-                                    id="new-selling"
-                                    type="number"
-                                    value={newProduct.sellingPrice}
-                                    onChange={(e) => setNewProduct({ ...newProduct, sellingPrice: e.target.value })}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="new-cost">Cost Price (₹)</Label>
-                                <Input
-                                    id="new-cost"
-                                    type="number"
-                                    value={newProduct.costPrice}
-                                    onChange={(e) => setNewProduct({ ...newProduct, costPrice: e.target.value })}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="new-stock">Stock Level</Label>
-                                <Input
-                                    id="new-stock"
-                                    type="number"
-                                    value={newProduct.stock}
-                                    onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="new-sizes">Available Sizes</Label>
-                                <Input
-                                    id="new-sizes"
-                                    value={newProduct.availableSizes}
-                                    onChange={(e) => setNewProduct({ ...newProduct, availableSizes: e.target.value })}
-                                    placeholder="e.g. S, M, L, XL"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="new-colors">Available Colors</Label>
-                                <Input
-                                    id="new-colors"
-                                    value={newProduct.availableColors}
-                                    onChange={(e) => setNewProduct({ ...newProduct, availableColors: e.target.value })}
-                                    placeholder="e.g. Black, White"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Image Section */}
-                        <div className="space-y-4 border rounded-lg p-4 bg-muted/20">
-                            <Label className="text-base font-semibold">Product Image</Label>
-
-                            {/* Tabs (Custom) */}
-                            <div className="flex items-center gap-2 mb-4">
-                                <Button
-                                    variant={imageTab === 'upload' ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => setImageTab('upload')}
-                                >
-                                    <Upload className="h-4 w-4 mr-2" /> Upload
-                                </Button>
-                                <Button
-                                    variant={imageTab === 'ai' ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => setImageTab('ai')}
-                                >
-                                    <Wand2 className="h-4 w-4 mr-2" /> AI Generate
-                                </Button>
+                                <Input id="new-title" value={newProduct.title} onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })} placeholder="e.g. Naruto Headband" />
                             </div>
 
-                            {imageTab === 'upload' ? (
-                                <div className="space-y-4">
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleFileUpload}
-                                    />
-                                    {uploadFile && <p className="text-xs text-muted-foreground">Selected: {uploadFile.name}</p>}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-category">Category</Label>
+                                    <select
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                                        value={newProduct.category}
+                                        onChange={handleNewCategoryChange}
+                                    >
+                                        <option value="" disabled>Select Category</option>
+                                        {["Anime T-Shirt", "Hoodies", "Toys", "Accessories", "Mugs", "Keychains", "Shoes", "Mouse Pads"].map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
                                 </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    <p className="text-sm text-muted-foreground">
-                                        Generate an image using AI based on the product title and description.
-                                    </p>
-                                    <Button onClick={() => handleGenerateAI(newProduct.title, newProduct.description)} disabled={isGenerating} className="w-full">
-                                        {isGenerating ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Wand2 className="mr-2 h-4 w-4" /> Generate Image
-                                            </>
-                                        )}
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-anime">Anime / Series</Label>
+                                    <Input id="new-anime" value={newProduct.anime} onChange={(e) => setNewProduct({ ...newProduct, anime: e.target.value })} placeholder="e.g. Naruto" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <Label htmlFor="new-desc">Description</Label>
+                                <textarea
+                                    id="new-desc"
+                                    className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    value={newProduct.description}
+                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                    placeholder="Describe the product..."
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-selling">Selling (₹)</Label>
+                                    <Input id="new-selling" type="number" value={newProduct.sellingPrice} onChange={(e) => setNewProduct({ ...newProduct, sellingPrice: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-cost">Cost (₹)</Label>
+                                    <Input id="new-cost" type="number" value={newProduct.costPrice} onChange={(e) => setNewProduct({ ...newProduct, costPrice: e.target.value })} />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-stock">Stock</Label>
+                                    <Input id="new-stock" type="number" value={newProduct.stock} onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Options & Media */}
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-sizes">Sizes</Label>
+                                    <Input id="new-sizes" value={newProduct.availableSizes} onChange={(e) => setNewProduct({ ...newProduct, availableSizes: e.target.value })} placeholder="e.g. S, M, L" />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label htmlFor="new-colors">Colors</Label>
+                                    <Input id="new-colors" value={newProduct.availableColors} onChange={(e) => setNewProduct({ ...newProduct, availableColors: e.target.value })} placeholder="e.g. Black, White" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 p-3 border rounded-lg bg-muted/20">
+                                <Label className="text-xs font-black uppercase">Product Image</Label>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant={imageTab === 'upload' ? 'default' : 'outline'}
+                                        size="sm"
+                                        className="flex-1 text-[10px]"
+                                        onClick={() => setImageTab('upload')}
+                                    >
+                                        <Upload className="h-3 w-3 mr-1" /> UPLOAD
+                                    </Button>
+                                    <Button
+                                        variant={imageTab === 'ai' ? 'default' : 'outline'}
+                                        size="sm"
+                                        className={`flex-1 text-[10px] ${imageTab === 'ai' && theme === 'retro' ? 'bg-[#72E1B1] hover:bg-[#72E1B1]/90 text-black' : ''}`}
+                                        onClick={() => setImageTab('ai')}
+                                    >
+                                        <Wand2 className="h-3 w-3 mr-1" /> AI GENERATE
                                     </Button>
                                 </div>
-                            )}
 
-                            {/* Preview */}
-                            {newProduct.imageUrl && (
-                                <div className="mt-4">
-                                    <p className="text-xs font-medium mb-2">Preview:</p>
-                                    <div className="h-48 w-full rounded-md border flex items-center justify-center bg-white overflow-hidden relative">
-                                        <img src={newProduct.imageUrl} alt="Preview" className="h-full object-contain" />
+                                {imageTab === 'upload' ? (
+                                    <Input type="file" accept="image/*" className="h-9 text-xs" onChange={handleFileUpload} />
+                                ) : (
+                                    <Button
+                                        onClick={() => handleGenerateAI(newProduct.title, newProduct.description, false)}
+                                        disabled={isGenerating}
+                                        className={`w-full h-9 text-[10px] font-black ${theme === 'retro' ? 'bg-[#72E1B1] hover:bg-[#72E1B1]/90 text-black' : ''}`}
+                                    >
+                                        {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wand2 className="h-3 w-3 mr-1" />}
+                                        {isGenerating ? "GENERATING..." : "START AI GENERATION"}
+                                    </Button>
+                                )}
+
+                                {newProduct.imageUrl && (
+                                    <div className="aspect-video w-full rounded-md border bg-white overflow-hidden relative">
+                                        <img src={newProduct.imageUrl} alt="Preview" className="h-full w-full object-contain" />
                                     </div>
-                                    <p className="text-xs text-green-600 mt-1 flex items-center">
-                                        <ImageIcon className="h-3 w-3 mr-1" /> Image ready
-                                    </p>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={handleCreateProduct} disabled={isSaving}>
-                            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Create Product
+                    <DialogFooter className="mt-2 pt-4 border-t flex justify-end items-center sm:justify-end gap-2 h-16">
+                        <Button variant="outline" size="sm" className="h-9 px-6 text-[10px] font-black" onClick={() => setIsAddDialogOpen(false)} disabled={isSaving}>CANCEL</Button>
+                        <Button onClick={handleCreateProduct} size="sm" className="h-9 px-8 text-[10px] font-black bg-primary text-white" disabled={isSaving}>
+                            {isSaving && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                            CREATE PRODUCT
                         </Button>
                     </DialogFooter>
                 </DialogContent>

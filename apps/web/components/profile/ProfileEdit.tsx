@@ -95,12 +95,12 @@ export function ProfileEdit({ user, onCancel, onUpdate }: ProfileEditProps) {
                     <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="123 Anime St, Tokyo" />
                 </div>
 
-                <div className="pt-4 flex gap-4 border-t mt-4">
-                    <Button type="submit" disabled={loading} className="w-full md:w-auto">
+                <div className="pt-6 flex flex-col sm:flex-row gap-4 border-t mt-6">
+                    <Button type="submit" disabled={loading} className="w-full sm:w-auto h-11 px-8 uppercase font-black tracking-widest text-xs">
                         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                         Save Changes
                     </Button>
-                    <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="w-full md:w-auto">
+                    <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="w-full sm:w-auto h-11 px-8 uppercase font-black tracking-widest text-xs">
                         Cancel
                     </Button>
                 </div>
