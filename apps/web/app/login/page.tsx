@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { fetchApi } from "@/lib/api";
 import { useSearchParams } from "next/navigation";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 function LoginForm() {
     const { login } = useAuth();
@@ -52,6 +53,27 @@ function LoginForm() {
         }
     };
 
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        setError("");
+        try {
+            const res = await fetchApi("/auth/google", {
+                method: "POST",
+                body: JSON.stringify({ credential: credentialResponse.credential }),
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || "Google login failed");
+            }
+
+            const data = await res.json();
+            const redirectPath = searchParams.get("redirect") || "/";
+            login(data.token, data.user, redirectPath);
+        } catch (err: any) {
+            setError(err.message);
+        }
+    };
+
     return (
         <div className="container max-w-md py-12 md:py-20 px-6">
             <h1 className="text-2xl md:text-3xl font-black uppercase mb-8 text-center tracking-tighter">Login</h1>
@@ -84,6 +106,30 @@ function LoginForm() {
                 <Button type="submit" className="w-full h-12 text-xs font-black tracking-widest uppercase">
                     {isAdmin ? "Log In as Admin" : "Log In"}
                 </Button>
+
+                {!isAdmin && (
+                    <div className="space-y-4">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-border" />
+                            </div>
+                            <div className="relative flex justify-center text-[10px] uppercase tracking-widest">
+                                <span className="bg-background px-2 text-muted-foreground font-black">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => setError("Google Login Failed")}
+                                theme="filled_black"
+                                shape="square"
+                                size="large"
+                                width="100%"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 <div className="text-center mt-6">
                     <button

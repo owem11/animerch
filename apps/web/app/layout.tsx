@@ -4,6 +4,7 @@ import { AuthProvider } from "../context/AuthContext";
 import { ThemeWrapper } from "@/components/ThemeWrapper";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export const metadata: Metadata = {
     title: "Animerch",
@@ -43,17 +44,19 @@ export default function RootLayout({
                 />
             </head>
             <body className="font-sans antialiased min-h-screen bg-background text-foreground">
-                <AuthProvider>
-                    <ThemeWrapper>
-                        <div className="flex flex-col min-h-screen relative z-10">
-                            <Navbar />
-                            <main className="flex-1">
-                                {children}
-                            </main>
-                            <Footer />
-                        </div>
-                    </ThemeWrapper>
-                </AuthProvider>
+                <GoogleOAuthProvider clientId="302029552769-h70ejlciavp5ijth66hf5pgnb5m1f2am.apps.googleusercontent.com">
+                    <AuthProvider>
+                        <ThemeWrapper>
+                            <div className="flex flex-col min-h-screen relative z-10">
+                                <Navbar />
+                                <main className="flex-1">
+                                    {children}
+                                </main>
+                                <Footer />
+                            </div>
+                        </ThemeWrapper>
+                    </AuthProvider>
+                </GoogleOAuthProvider>
             </body>
         </html>
     );

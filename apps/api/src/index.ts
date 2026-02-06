@@ -16,6 +16,7 @@ const app: Express = express();
 const port = process.env.PORT || 4001;
 
 import authRoutes from "./routes/auth";
+import googleAuthRoutes from "./routes/google";
 
 app.use(helmet());
 app.use(cors());
@@ -23,6 +24,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/auth", authRoutes);
+app.use("/auth", googleAuthRoutes);
 
 app.get("/health", async (req: Request, res: Response) => {
     try {
