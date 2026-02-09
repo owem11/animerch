@@ -10,11 +10,18 @@
     "db:studio": "turbo run db:studio"
   },
   "devDependencies": {
-    "turbo": "latest",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "tsx": "^4.7.0",
+    "turbo": "latest"
   },
   "packageManager": "pnpm@8.15.0",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "mysql2": "^3.9.1",
+    "pg": "^8.18.0",
+    "postgres": "^3.4.8"
   }
 }

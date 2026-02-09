@@ -5,8 +5,8 @@ dotenv.config({ path: "../../.env" });
 export default {
     schema: "./src/db/schema.ts",
     out: "./drizzle",
-    driver: "mysql2",
+    driver: "pg",
     dbCredentials: {
-        uri: process.env.DATABASE_URL || "mysql://apiuser:apipassword@localhost:3306/animerch",
+        connectionString: process.env.DATABASE_URL || "",
     },
 } satisfies Config;

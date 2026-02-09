@@ -39,6 +39,7 @@ export default function ProfilePage() {
                 <ProfileDashboard
                     user={user}
                     onEdit={() => setView("edit")}
+                    onUpdate={handleUpdate}
                 />
             ) : (
                 <ProfileEdit

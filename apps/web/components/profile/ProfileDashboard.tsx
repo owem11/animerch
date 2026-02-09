@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Edit, Package, MapPin, Mail, Phone, Calendar, Star, Loader2 } from "lucide-react";
+import { Edit, Package, MapPin, Mail, Phone, Calendar, Star, Loader2, Camera } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fetchApi } from "@/lib/api";
 import Link from "next/link";
 import { ProductItemCard } from "@/components/ProductItemCard";
@@ -28,13 +28,61 @@ interface Order {
 interface ProfileDashboardProps {
     user: any;
     onEdit: () => void;
+    onUpdate: (user: any) => void;
 }
 
-export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
+export function ProfileDashboard({ user, onEdit, onUpdate }: ProfileDashboardProps) {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
     const [ratings, setRatings] = useState<Record<number, number>>({}); // productId -> rating
     const [submittingRating, setSubmittingRating] = useState<number | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const uploadRes = await fetchApi("/api/upload", {
+                method: "POST",
+                headers: {
+                    // Content-Type is set automatically for FormData
+                },
+                body: formData as any,
+            });
+
+            if (!uploadRes.ok) throw new Error("Upload failed");
+
+            const { imageUrl } = await uploadRes.json();
+
+            // Update user profile
+            const updateRes = await fetchApi("/api/users/profile", {
+                method: "PUT",
+                body: JSON.stringify({
+                    imageUrl
+                })
+            });
+
+            if (updateRes.ok) {
+                const updatedUser = await updateRes.json();
+                onUpdate(updatedUser);
+            }
+        } catch (error) {
+            console.error("Failed to upload image", error);
+            alert("Failed to upload image. Please try again.");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -79,11 +127,35 @@ export function ProfileDashboard({ user, onEdit }: ProfileDashboardProps) {
 
                 {/* Avatar Section */}
                 <div className="flex flex-col items-center justify-center space-y-4 md:border-r border-border/50 md:pr-6 pb-6 md:pb-0">
-                    <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border-2 md:border-4 border-background ring-2 ring-primary/20 shadow-xl">
-                        <img
-                            src={user?.imageUrl || "https://placehold.co/200?text=USER"}
-                            alt={user?.username}
-                            className="object-cover w-full h-full"
+                    <div className="relative group">
+                        <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border-2 md:border-4 border-background ring-2 ring-primary/20 shadow-xl bg-muted">
+                            <img
+                                src={user?.imageUrl || "https://placehold.co/200?text=USER"}
+                                alt={user?.username}
+                                className="object-cover w-full h-full"
+                            />
+                            {uploading && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                    <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            onClick={handleAvatarClick}
+                            disabled={uploading}
+                            className="absolute bottom-0 right-0 p-2 rounded-full bg-primary text-primary-foreground shadow-lg hover:scale-110 active:scale-95 transition-all z-10"
+                            title="Update Profile Picture"
+                        >
+                            <Camera className="h-4 w-4 md:h-5 md:w-5" />
+                        </button>
+
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            accept="image/*"
+                            className="hidden"
                         />
                     </div>
                     <div className="text-center">

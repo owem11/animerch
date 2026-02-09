@@ -1,17 +1,23 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "./schema";
 import * as dotenv from "dotenv";
 import path from "path";
+import dns from "dns";
+
+// Force IPv4 for Supabase connectivity
+dns.setDefaultResultOrder('ipv4first');
 
 dotenv.config({ path: path.resolve(__dirname, "../../../../.env") });
 
-const poolConnection = mysql.createPool({
-    host: process.env.DB_HOST || "127.0.0.1",
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: Number(process.env.DB_PORT) || 3306,
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+    throw new Error("DATABASE_URL environment variable is not set");
+}
+
+const client = postgres(connectionString, {
+    ssl: { rejectUnauthorized: false }
 });
 
-export const db = drizzle(poolConnection, { schema, mode: "default" });
+export const db = drizzle(client, { schema });
