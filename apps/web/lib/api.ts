@@ -4,8 +4,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001";
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+    const isFormData = options.body instanceof FormData;
+
     const headers = {
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
     };
