@@ -82,9 +82,9 @@ router.post("/", authenticateToken, async (req: AuthRequest, res: Response) => {
             userId: req.user.id,
             total: String(totalAmount),
             status: "completed", // Auto-complete for now as there's no payment gateway
-        });
+        }).returning({ id: orders.id });
 
-        const newOrderId = newOrderObj[0].insertId;
+        const newOrderId = newOrderObj[0].id;
 
         // 4. Create Order Items & Update Stock
         for (const item of userCartItems) {

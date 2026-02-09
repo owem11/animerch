@@ -46,8 +46,8 @@ async function seedOrders() {
                 status: statuses[i],
                 total: total,
                 createdAt: new Date(Date.now() - i * 86400000) // Past dates
-            });
-            const orderId = res[0].insertId;
+            }).returning({ id: orders.id });
+            const orderId = res[0].id;
 
             // Create Order Item
             await db.insert(orderItems).values({

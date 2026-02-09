@@ -51,9 +51,9 @@ async function generateSales() {
             total: orderTotal.toFixed(2),
             status: "completed",
             createdAt: orderDate,
-        });
+        }).returning({ id: orders.id });
 
-        const orderId = insertResult.insertId;
+        const orderId = insertResult.id;
 
         // Insert Order Items and Update Stock
         for (const item of itemsToInsert) {

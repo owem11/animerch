@@ -4,7 +4,7 @@ import { users, orders, orderItems, products, cartItems } from "../db/schema";
 import { eq, sql, desc, count } from "drizzle-orm";
 import { authenticateToken, AuthRequest } from "../middleware/auth";
 import { requireAdmin } from "../middleware/admin";
-import { generateImageFromDescription } from "../lib/gemini";
+import { generateImageFromDescription } from "../lib/leonardo";
 import fs from "fs";
 import path from "path";
 
@@ -71,7 +71,7 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
             total: orders.total
         })
             .from(orders)
-            .where(sql`${orders.createdAt} >= DATE_SUB(NOW(), INTERVAL 7 DAY)`)
+            .where(sql`${orders.createdAt} >= NOW() - INTERVAL '7 days'`)
             .orderBy(orders.createdAt);
 
         const salesMap = new Map<string, number>();
@@ -99,7 +99,7 @@ router.get("/stats", async (req: AuthRequest, res: Response) => {
             .from(orders)
             .innerJoin(orderItems, eq(orders.id, orderItems.orderId))
             .innerJoin(products, eq(orderItems.productId, products.id))
-            .where(sql`${orders.createdAt} >= DATE_SUB(NOW(), INTERVAL 7 DAY)`)
+            .where(sql`${orders.createdAt} >= NOW() - INTERVAL '7 days'`)
             .orderBy(orders.createdAt);
 
         const profitMap = new Map<string, number>();
@@ -307,9 +307,9 @@ router.post("/products", async (req: AuthRequest, res: Response) => {
             anime: anime || "N/A",
             availableSizes: availableSizes || null,
             availableColors: availableColors || null,
-        });
+        }).returning({ id: products.id });
 
-        res.status(201).json({ message: "Product created successfully", id: result[0].insertId, imageUrl });
+        res.status(201).json({ message: "Product created successfully", id: result[0].id, imageUrl });
     } catch (error) {
         console.error("Create product error:", error);
         res.status(500).json({ error: "Failed to create product" });
