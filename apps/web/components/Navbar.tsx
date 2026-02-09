@@ -45,7 +45,7 @@ export function Navbar() {
         <div className="flex flex-col w-full">
             {/* Top Bar: Logo */}
             <div className="w-full flex justify-center py-6 md:py-12 border-b border-border/50">
-                <h1 className="text-4xl md:text-8xl font-heading font-black tracking-[-0.05em] hover:tracking-[0.05em] hover:scale-[1.02] transition-[tracking,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] uppercase select-none">
+                <h1 className="text-4xl md:text-8xl font-title font-black tracking-[-0.05em] hover:tracking-[0.05em] hover:scale-[1.02] transition-[tracking,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] uppercase select-none">
                     <Link href="/" className="block">ANIMERCH</Link>
                 </h1>
             </div>

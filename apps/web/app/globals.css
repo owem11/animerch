@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Smile Delight';
+  src: url('/fonts/SmileDelight.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -29,6 +37,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --font-title: "Century Gothic", "Futura", sans-serif;
   }
 
   /* DEFAULT THEME NAVAR FIX */
@@ -178,6 +187,7 @@ body {
   background-color: hsl(var(--background)) !important;
   color: hsl(var(--foreground)) !important;
   font-family: "Century Gothic", "Futura", sans-serif !important;
+  --font-title: "Smile Delight", cursive !important;
 }
 
 /* Specific class for random navbar color, injected via JS */

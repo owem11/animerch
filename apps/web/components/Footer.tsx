@@ -6,7 +6,7 @@ export function Footer() {
         <footer className="w-full border-t bg-background py-16">
             <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
                 <div className="space-y-4 text-center md:text-left">
-                    <Link href="/" className="text-2xl font-black tracking-tight block">
+                    <Link href="/" className="text-2xl font-title font-black tracking-tight block">
                         ANIMERCH
                     </Link>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto md:mx-0">
