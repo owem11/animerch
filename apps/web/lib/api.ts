@@ -1,4 +1,15 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001";
+let API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4001";
+
+// Ensure API_URL has a protocol (defaults to https for production domains)
+if (API_URL && !API_URL.startsWith('http')) {
+    API_URL = `https://${API_URL}`;
+}
+
+// Remove trailing slash to prevent double slashes in paths
+if (API_URL.endsWith('/')) {
+    API_URL = API_URL.slice(0, -1);
+}
+
 
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
