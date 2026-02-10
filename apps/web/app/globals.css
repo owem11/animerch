@@ -102,6 +102,14 @@ body {
   font-family: "Century Gothic", "Futura", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Ensure Logo/Header is explicitly bold for Default & Retro */
+.theme-default .font-title,
+.theme-retro .font-title {
+  font-weight: 900 !important;
+  -webkit-text-stroke: 1.5px currentColor;
+  paint-order: stroke fill;
+}
+
 /* ===== CYBER THEME (R.A.C.E.N CLONE) ===== */
 .theme-cyber {
   --background: 220 27% 6% !important;
