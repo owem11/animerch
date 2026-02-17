@@ -5,7 +5,7 @@ import { fetchApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "next/navigation";
-import { Loader2, Users, Package, ShoppingBag, TrendingUp, AlertTriangle, ShoppingCart, ArrowRight } from "lucide-react";
+import { Loader2, Users, Package, ShoppingBag, TrendingUp, AlertTriangle, ShoppingCart, ArrowRight, Activity, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import {
     BarChart,
@@ -41,6 +41,8 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [monitors, setMonitors] = useState<any[]>([]);
+    const [uptimeLoading, setUptimeLoading] = useState(true);
 
     const getChartColors = () => {
         if (theme === 'retro') {
@@ -77,6 +79,22 @@ export default function AdminDashboard() {
             };
 
             loadStats();
+
+            const loadUptime = async () => {
+                try {
+                    const res = await fetch("/api/uptime");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setMonitors(data.monitors || []);
+                    }
+                } catch (err) {
+                    console.error("Failed to load uptime stats");
+                } finally {
+                    setUptimeLoading(false);
+                }
+            };
+
+            loadUptime();
         }
     }, [user, authLoading, router]);
 
@@ -107,6 +125,50 @@ export default function AdminDashboard() {
                         <Link href="/admin/users" className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-secondary/80 flex items-center gap-2">
                             <Users className="h-4 w-4" /> Users
                         </Link>
+                    </div>
+                </div>
+
+                {/* System Status Section */}
+                <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Activity className="h-5 w-5 text-primary" />
+                        <h2 className="text-lg font-black uppercase tracking-widest">System Status</h2>
+                    </div>
+                    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                        {uptimeLoading ? (
+                            Array(2).fill(0).map((_, i) => (
+                                <div key={i} className="rounded-xl border bg-card p-4 animate-pulse h-24" />
+                            ))
+                        ) : monitors.length > 0 ? (
+                            monitors.map((monitor: any) => (
+                                <div key={monitor.id} className="rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-shadow">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate max-w-[150px]">
+                                            {monitor.friendly_name}
+                                        </span>
+                                        {monitor.status === 2 ? (
+                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                            <XCircle className="h-4 w-4 text-destructive" />
+                                        )}
+                                    </div>
+                                    <div className="flex items-baseline gap-2">
+                                        <div className={`text-xl font-bold ${monitor.status === 2 ? 'text-green-500' : 'text-destructive'}`}>
+                                            {monitor.status === 2 ? 'ONLINE' : 'OFFLINE'}
+                                        </div>
+                                        <div className="text-[10px] font-bold text-muted-foreground uppercase">
+                                            {monitor.all_time_uptime_ratio}% Uptime
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-span-full p-6 rounded-xl border border-dashed flex flex-col items-center justify-center text-center bg-muted/5">
+                                <AlertTriangle className="h-8 w-8 text-muted-foreground mb-2" />
+                                <p className="text-sm font-bold uppercase tracking-tight">No Monitors Found</p>
+                                <p className="text-xs text-muted-foreground">Please ensure UPTIMEROBOT_API_KEY is set in .env and monitors are created.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
