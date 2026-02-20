@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, Mail, MessageSquare, User, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
+import { Send, Mail, MessageSquare, User, Headphones, Loader2, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -49,7 +49,7 @@ export default function SupportPage() {
             <div className="container max-w-2xl mx-auto relative z-10">
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
-                        <Sparkles className="h-4 w-4 text-primary" />
+                        <Headphones className="h-4 w-4 text-primary" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-primary">24/7 Support</span>
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4">Contact Us</h1>
@@ -169,7 +169,7 @@ export default function SupportPage() {
                         <p className="text-xs font-bold">Instantly (AI Powered)</p>
                     </div>
                     <div className="p-6 rounded-xl border bg-card/50 backdrop-blur-sm text-center">
-                        <Sparkles className="h-6 w-6 mx-auto mb-3 text-primary" />
+                        <Clock className="h-6 w-6 mx-auto mb-3 text-primary" />
                         <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Available</p>
                         <p className="text-xs font-bold">24/7 Everywhere</p>
                     </div>

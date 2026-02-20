@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Palette, Zap, Sparkles, Monitor } from "lucide-react";
+import { Palette, Zap, Star, Monitor } from "lucide-react";
 
 export function ThemeSelector() {
     const { theme, setTheme } = useTheme();
@@ -45,7 +45,7 @@ export function ThemeSelector() {
                     onClick={() => setTheme('retro')}
                     className="flex items-center gap-2 cursor-pointer transition-all duration-200 [.theme-retro_&]:px-4 [.theme-retro_&]:py-2 [.theme-retro_&]:rounded-full [.theme-retro_&]:hover:bg-accent [.theme-retro_&]:hover:text-black [.theme-cyber_&]:hover:bg-cyan-500/10 [.theme-cyber_&]:hover:text-cyan-400 focus:bg-accent focus:text-accent-foreground"
                 >
-                    <Sparkles className="h-4 w-4 text-purple-500" />
+                    <Star className="h-4 w-4 text-purple-500" />
                     <span className="font-sans uppercase text-[10px] font-black tracking-widest">Retro</span>
                     {theme === 'retro' && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
                 </DropdownMenuItem>
