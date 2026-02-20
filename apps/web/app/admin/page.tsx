@@ -149,7 +149,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* System Status + What's New — square card rows */}
-                <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 lg:h-72">
+                <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
 
                     {/* System Status — full aesthetic layout */}
                     <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col h-72 lg:h-full">
