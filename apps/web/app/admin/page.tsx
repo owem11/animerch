@@ -7,6 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "next/navigation";
 import { Loader2, Users, Package, ShoppingBag, TrendingUp, AlertTriangle, ShoppingCart, ArrowRight, Activity, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
+import { RecentUpdatesModal } from "@/components/admin/RecentUpdatesModal";
 import {
     BarChart,
     Bar,
@@ -43,6 +44,8 @@ export default function AdminDashboard() {
     const [error, setError] = useState("");
     const [monitors, setMonitors] = useState<any[]>([]);
     const [uptimeLoading, setUptimeLoading] = useState(true);
+    const [supportQueries, setSupportQueries] = useState<any[]>([]);
+    const [supportLoading, setSupportLoading] = useState(true);
 
     const getChartColors = () => {
         if (theme === 'retro') {
@@ -95,6 +98,22 @@ export default function AdminDashboard() {
             };
 
             loadUptime();
+
+            const loadSupport = async () => {
+                try {
+                    const res = await fetchApi("/api/support/queries");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setSupportQueries(data || []);
+                    }
+                } catch (err) {
+                    console.error("Failed to load support queries");
+                } finally {
+                    setSupportLoading(false);
+                }
+            };
+
+            loadSupport();
         }
     }, [user, authLoading, router]);
 
@@ -112,6 +131,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen cyber-grid">
+            <RecentUpdatesModal />
             <div className="container mx-auto p-8">
                 <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
@@ -167,6 +187,61 @@ export default function AdminDashboard() {
                                 <AlertTriangle className="h-8 w-8 text-muted-foreground mb-2" />
                                 <p className="text-sm font-bold uppercase tracking-tight">No Monitors Found</p>
                                 <p className="text-xs text-muted-foreground">Please ensure UPTIMEROBOT_API_KEY is set in .env and monitors are created.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Contact Queries Section */}
+                <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Activity className="h-5 w-5 text-primary" />
+                        <h2 className="text-lg font-black uppercase tracking-widest">Contact Queries</h2>
+                    </div>
+                    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+                        {supportLoading ? (
+                            <div className="p-12 flex items-center justify-center">
+                                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : supportQueries.length > 0 ? (
+                            <div className="overflow-x-auto border-t">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="text-[10px] uppercase bg-muted/50 text-muted-foreground font-black tracking-widest">
+                                        <tr>
+                                            <th className="px-6 py-3">Sender</th>
+                                            <th className="px-6 py-3">Subject</th>
+                                            <th className="px-6 py-3">Snippet</th>
+                                            <th className="px-6 py-3">Status</th>
+                                            <th className="px-6 py-3 text-right">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y border-t">
+                                        {supportQueries.map((query) => (
+                                            <tr key={query.id} className="hover:bg-muted/5 transition-colors">
+                                                <td className="px-6 py-4 font-bold tracking-tight">{query.sender}</td>
+                                                <td className="px-6 py-4 truncate max-w-[150px]">{query.subject}</td>
+                                                <td className="px-6 py-4 text-muted-foreground text-xs italic">
+                                                    "{query.summarizedBody || "No summary available"}"
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${query.status === 'automated' ? 'bg-green-100 text-green-700' :
+                                                            query.status === 'drafted' ? 'bg-orange-100 text-orange-700' :
+                                                                'bg-blue-100 text-blue-700'
+                                                        }`}>
+                                                        {query.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right text-[10px] font-bold text-muted-foreground">
+                                                    {new Date(query.createdAt).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <div className="p-12 text-center border-t">
+                                <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">No queries found.</p>
                             </div>
                         )}
                     </div>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, Suspense } from "react";
@@ -9,12 +8,14 @@ import Link from "next/link";
 import { fetchApi } from "@/lib/api";
 import { useSearchParams } from "next/navigation";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { Eye, EyeOff } from "lucide-react";
 
 function LoginForm() {
     const { login } = useAuth();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [error, setError] = useState("");
 
@@ -93,14 +94,28 @@ function LoginForm() {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Password</label>
-                    <Input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="h-12 bg-muted/20"
-                    />
+                    <div className="flex items-center justify-between ml-1">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Password</label>
+                        <Link href="/forgot-password" size="sm" className="text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-tighter">
+                            Forgot?
+                        </Link>
+                    </div>
+                    <div className="relative">
+                        <Input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="h-12 bg-muted/20 pr-10"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                    </div>
                 </div>
 
                 <Button type="submit" className="w-full h-12 text-xs font-black tracking-widest uppercase">

@@ -106,6 +106,7 @@ export function Navbar() {
 
                         <Link href="/?sort=rating" className="hover:text-primary transition-colors duration-500 ease-in-out">BEST SELLERS</Link>
                         <Link href="/?sort=price_desc" className="hover:text-primary transition-colors duration-500 ease-in-out">PREMIUM</Link>
+                        <Link href="/support" className="hover:text-primary transition-colors duration-500 ease-in-out">SUPPORT</Link>
                     </div>
 
                     {/* Center: Search (Hidden on small mobile, shown on md+) */}

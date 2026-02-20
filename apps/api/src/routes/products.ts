@@ -14,7 +14,7 @@ router.get("/", async (req: Request, res: Response) => {
         const conditions = [];
 
         if (search) {
-            conditions.push(like(products.title, `%${search}%`));
+            conditions.push(sql`(${products.title} ILIKE ${`%${search}%`} OR ${products.category} ILIKE ${`%${search}%`} OR ${products.anime} ILIKE ${`%${search}%`})`);
         }
 
         if (category) {

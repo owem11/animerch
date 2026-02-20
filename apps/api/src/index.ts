@@ -57,6 +57,8 @@ import uploadRoutes from "./routes/upload";
 app.use("/api/upload", uploadRoutes);
 import reviewRoutes from "./routes/reviews";
 app.use("/api/reviews", reviewRoutes);
+import supportRoutes from "./routes/support";
+app.use("/api/support", supportRoutes);
 
 // Serve static files from public/uploads
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));

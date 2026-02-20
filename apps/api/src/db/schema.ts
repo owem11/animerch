@@ -6,7 +6,34 @@ import {
     numeric,
     timestamp,
     text,
+    uuid,
+    boolean,
 } from "drizzle-orm/pg-core";
+
+// ... existing code ...
+
+export const leads = pgTable("leads", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: varchar("email", { length: 255 }).notNull().unique(),
+    fullName: varchar("full_name", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow(),
+    lastInteraction: timestamp("last_interaction").defaultNow(),
+});
+
+export const supportEmails = pgTable("support_emails", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    messageId: varchar("message_id", { length: 255 }).notNull().unique(),
+    threadId: varchar("thread_id", { length: 255 }).notNull(),
+    direction: varchar("direction", { length: 20 }).notNull(),
+    sender: varchar("sender", { length: 255 }).notNull(),
+    recipient: varchar("recipient", { length: 255 }).notNull(),
+    subject: text("subject"),
+    summarizedBody: text("summarized_body"),
+    fullBody: text("full_body"),
+    status: varchar("status", { length: 50 }).default("automated"),
+    guardrailTriggered: boolean("guardrail_triggered").default(false),
+    createdAt: timestamp("created_at").defaultNow(),
+});
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),

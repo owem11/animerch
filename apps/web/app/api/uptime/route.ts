@@ -13,7 +13,7 @@ export async function GET() {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: `api_key=${apiKey}&format=json`,
+            body: `api_key=${apiKey}&format=json&all_time_uptime_ratio=1`,
         });
 
         const data = await response.json();

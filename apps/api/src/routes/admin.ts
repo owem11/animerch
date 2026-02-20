@@ -295,6 +295,12 @@ router.post("/products", async (req: AuthRequest, res: Response) => {
             console.log(`Image saved. New path: ${imageUrl}`);
         }
 
+        // Check for duplicate product title
+        const existing = await db.select().from(products).where(eq(products.title, title)).limit(1);
+        if (existing.length > 0) {
+            return res.status(400).json({ error: "A product with this title already exists. Please use a unique title." });
+        }
+
         const result = await db.insert(products).values({
             title,
             description: description || "",
