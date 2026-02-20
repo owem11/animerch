@@ -152,7 +152,7 @@ export default function AdminDashboard() {
                 <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
 
                     {/* System Status — full aesthetic layout */}
-                    <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col h-72 lg:h-full">
+                    <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col h-80">
                         <div className="flex items-center gap-2 mb-5">
                             <Activity className="h-4 w-4 text-primary" />
                             <span className="text-xs font-black uppercase tracking-widest">System Status</span>
