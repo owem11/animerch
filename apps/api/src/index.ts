@@ -65,6 +65,10 @@ app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 // Health check remains...
 
+import { startSupportAutomation } from "./services/lead-responder";
+
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
+    // Start IMAP Listener securely inside API instance
+    startSupportAutomation().catch(console.error);
 });

@@ -125,7 +125,7 @@ export function WhatsNewCarousel() {
     const update = UPDATES[index];
 
     return (
-        <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col h-80">
+        <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ export function WhatsNewCarousel() {
                         <div className="shrink-0">{update.icon}</div>
                         <h3 className="text-base font-black uppercase tracking-tight leading-tight">{update.title}</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{update.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{update.description}</p>
                 </div>
 
                 <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-4">{update.date}</div>
