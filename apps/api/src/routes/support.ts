@@ -2,48 +2,25 @@ import { Router, Request, Response } from "express";
 import { db } from "../db";
 import { supportEmails, leads } from "../db/schema";
 import { desc, eq } from "drizzle-orm";
-import { google } from "googleapis";
+import nodemailer from "nodemailer";
 
 const router = Router();
 
-// Helper to send email via Gmail API
 async function sendEmailToHelp(senderEmail: string, senderName: string, subject: string, body: string) {
-    const auth = new google.auth.OAuth2(
-        process.env.GOOGLE_CLIENT_ID,
-        process.env.GOOGLE_CLIENT_SECRET,
-        process.env.GOOGLE_REDIRECT_URI || "http://localhost:3001/oauth2callback"
-    );
-
-    auth.setCredentials({
-        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.GMAIL_USER_EMAIL || "animerch.help@gmail.com",
+            pass: process.env.GMAIL_APP_PASSWORD
+        }
     });
 
-    const gmail = google.gmail({ version: "v1", auth });
-
-    const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
-    const messageParts = [
-        `From: ${senderName} <${senderEmail}>`,
-        `To: ${process.env.GMAIL_USER_EMAIL || "animerch.help@gmail.com"}`,
-        `Subject: ${utf8Subject}`,
-        'Content-Type: text/plain; charset=utf-8',
-        'MIME-Version: 1.0',
-        '',
-        body,
-    ];
-    const message = messageParts.join('\n');
-
-    // The body needs to be base64url encoded.
-    const encodedMessage = Buffer.from(message)
-        .toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-    await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: {
-            raw: encodedMessage,
-        },
+    await transporter.sendMail({
+        from: `"${senderName}" <${process.env.GMAIL_USER_EMAIL || "animerch.help@gmail.com"}>`,
+        replyTo: senderEmail,
+        to: process.env.GMAIL_USER_EMAIL || "animerch.help@gmail.com",
+        subject: subject,
+        text: `From: ${senderName} <${senderEmail}>\n\n${body}`
     });
 }
 
