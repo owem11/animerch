@@ -5,8 +5,9 @@ import { fetchApi } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "next/navigation";
-import { Loader2, Users, Package, ShoppingBag, TrendingUp, AlertTriangle, ShoppingCart, ArrowRight } from "lucide-react";
+import { Loader2, Users, Package, ShoppingBag, TrendingUp, AlertTriangle, ShoppingCart, ArrowRight, Activity, Bell } from "lucide-react";
 import Link from "next/link";
+import { RecentUpdatesModal, WhatsNewCarousel } from "@/components/admin/RecentUpdatesModal";
 import {
     BarChart,
     Bar,
@@ -41,6 +42,10 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [monitors, setMonitors] = useState<any[]>([]);
+    const [uptimeLoading, setUptimeLoading] = useState(true);
+    const [supportQueries, setSupportQueries] = useState<any[]>([]);
+    const [supportLoading, setSupportLoading] = useState(true);
 
     const getChartColors = () => {
         if (theme === 'retro') {
@@ -77,6 +82,38 @@ export default function AdminDashboard() {
             };
 
             loadStats();
+
+            const loadUptime = async () => {
+                try {
+                    const res = await fetch("/api/uptime");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setMonitors(data.monitors || []);
+                    }
+                } catch (err) {
+                    console.error("Failed to load uptime stats");
+                } finally {
+                    setUptimeLoading(false);
+                }
+            };
+
+            loadUptime();
+
+            const loadSupport = async () => {
+                try {
+                    const res = await fetchApi("/api/support/queries");
+                    if (res.ok) {
+                        const data = await res.json();
+                        setSupportQueries(data || []);
+                    }
+                } catch (err) {
+                    console.error("Failed to load support queries");
+                } finally {
+                    setSupportLoading(false);
+                }
+            };
+
+            loadSupport();
         }
     }, [user, authLoading, router]);
 
@@ -94,6 +131,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen cyber-grid">
+            <RecentUpdatesModal />
             <div className="container mx-auto p-8">
                 <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
@@ -107,6 +145,129 @@ export default function AdminDashboard() {
                         <Link href="/admin/users" className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md font-bold text-[10px] uppercase tracking-widest hover:bg-secondary/80 flex items-center gap-2">
                             <Users className="h-4 w-4" /> Users
                         </Link>
+                    </div>
+                </div>
+
+                {/* System Status + What's New — square card rows */}
+                <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+                    {/* System Status — full aesthetic layout */}
+                    <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-col">
+                        <div className="flex items-center gap-2 mb-5">
+                            <Activity className="h-4 w-4 text-primary" />
+                            <span className="text-xs font-black uppercase tracking-widest">System Status</span>
+                        </div>
+                        {uptimeLoading ? (
+                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {Array(2).fill(0).map((_, i) => (
+                                    <div key={i} className="rounded-2xl bg-muted animate-pulse h-36" />
+                                ))}
+                            </div>
+                        ) : monitors.length > 0 ? (
+                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {monitors.map((monitor: any) => {
+                                    const isOnline = monitor.status === 2;
+                                    return (
+                                        <div
+                                            key={monitor.id}
+                                            className={`relative rounded-2xl p-5 flex flex-col justify-between overflow-hidden border ${isOnline
+                                                ? 'border-green-500/20 bg-gradient-to-br from-green-500/10 via-transparent to-transparent'
+                                                : 'border-destructive/20 bg-gradient-to-br from-destructive/10 via-transparent to-transparent'
+                                                }`}
+                                        >
+                                            {/* Decorative glow orb */}
+                                            <div className={`absolute -top-4 -right-4 h-16 w-16 rounded-full blur-2xl opacity-40 ${isOnline ? 'bg-green-400' : 'bg-red-400'}`} />
+                                            <div>
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <div className={`h-2.5 w-2.5 rounded-full ${isOnline ? 'bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]' : 'bg-destructive'}`} />
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${isOnline ? 'text-green-400' : 'text-destructive'}`}>
+                                                        {isOnline ? 'Operational' : 'Disruption'}
+                                                    </span>
+                                                </div>
+                                                <p className="text-base font-black leading-tight">{monitor.friendly_name}</p>
+                                            </div>
+                                            <div className="mt-4">
+                                                <div className="flex items-end gap-1">
+                                                    <span className={`text-3xl font-black tabular-nums ${isOnline ? 'text-green-400' : 'text-destructive'}`}>
+                                                        {monitor.all_time_uptime_ratio}
+                                                    </span>
+                                                    <span className="text-xs font-black text-muted-foreground mb-1">% uptime</span>
+                                                </div>
+                                                <div className={`mt-2 h-1 rounded-full ${isOnline ? 'bg-green-500/20' : 'bg-destructive/20'}`}>
+                                                    <div
+                                                        className={`h-full rounded-full ${isOnline ? 'bg-green-400' : 'bg-destructive'}`}
+                                                        style={{ width: `${Math.min(100, parseFloat(monitor.all_time_uptime_ratio))}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="flex-1 flex items-center justify-center gap-2 rounded-2xl border border-dashed text-muted-foreground">
+                                <AlertTriangle className="h-5 w-5" />
+                                <span className="text-sm font-bold">No monitors found. Check UPTIMEROBOT_API_KEY.</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* What's New — arrow carousel, no scrollbar */}
+                    <WhatsNewCarousel />
+
+                </div>
+
+                {/* Contact Queries Section */}
+                <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Activity className="h-4 w-4 text-primary" />
+                        <h2 className="text-sm font-black uppercase tracking-widest">Contact Queries</h2>
+                    </div>
+                    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+                        {supportLoading ? (
+                            <div className="p-8 flex items-center justify-center">
+                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : supportQueries.length > 0 ? (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="text-[9px] uppercase bg-muted/50 text-muted-foreground font-black tracking-widest border-b">
+                                        <tr>
+                                            <th className="px-4 py-2">Sender</th>
+                                            <th className="px-4 py-2">Subject</th>
+                                            <th className="px-4 py-2 hidden md:table-cell">Snippet</th>
+                                            <th className="px-4 py-2">Status</th>
+                                            <th className="px-4 py-2 text-right">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {supportQueries.slice(0, 5).map((query: any) => (
+                                            <tr key={query.id} className="hover:bg-muted/5 transition-colors">
+                                                <td className="px-4 py-2.5 font-bold text-xs tracking-tight truncate max-w-[120px]">{query.sender}</td>
+                                                <td className="px-4 py-2.5 text-xs truncate max-w-[140px]">{query.subject}</td>
+                                                <td className="px-4 py-2.5 text-muted-foreground text-[10px] italic hidden md:table-cell truncate max-w-[200px]">
+                                                    &ldquo;{query.summarizedBody || "No summary"}&rdquo;
+                                                </td>
+                                                <td className="px-4 py-2.5">
+                                                    <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${query.status === 'automated' ? 'bg-green-100 text-green-700' :
+                                                        query.status === 'drafted' ? 'bg-orange-100 text-orange-700' :
+                                                            'bg-blue-100 text-blue-700'}`}>
+                                                        {query.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-2.5 text-right text-[9px] font-bold text-muted-foreground">
+                                                    {new Date(query.createdAt).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <div className="p-6 text-center">
+                                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">No queries found.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

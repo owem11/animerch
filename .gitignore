@@ -11,3 +11,8 @@ build
 
 # OAuth credentials
 **/GoogleOAuth/
+apps/lead-responder/*.json
+
+# Temporary files
+*-full-recor
+temp/

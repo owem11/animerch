@@ -3,7 +3,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { ArrowRight, TrendingUp, Clock } from "lucide-react";
 
 interface Product {
     id: number;

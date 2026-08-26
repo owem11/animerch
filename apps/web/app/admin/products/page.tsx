@@ -399,7 +399,8 @@ export default function AdminProductsPage() {
                 setUploadFile(null);
                 window.location.reload();
             } else {
-                alert("Failed to create product");
+                const data = await res.json();
+                alert(data.error || "Failed to create product");
             }
         } catch (error) {
             console.error("Create error", error);
@@ -534,12 +535,12 @@ export default function AdminProductsPage() {
                                             </td>
                                         )}
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded bg-muted overflow-hidden flex-shrink-0 border">
+                                            <Link href={`/product/${product.id}`} target="_blank" className="flex items-center gap-3 group">
+                                                <div className="h-10 w-10 rounded bg-muted overflow-hidden flex-shrink-0 border group-hover:border-primary transition-colors">
                                                     {product.imageUrl && <img src={product.imageUrl} alt={product.title} className="h-full w-full object-cover" />}
                                                 </div>
-                                                <span className="font-medium">{product.title}</span>
-                                            </div>
+                                                <span className="font-medium group-hover:text-primary transition-colors">{product.title}</span>
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4 text-muted-foreground">
                                             {product.category}

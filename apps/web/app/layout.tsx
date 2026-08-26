@@ -44,7 +44,7 @@ export default function RootLayout({
                 />
             </head>
             <body className="font-sans antialiased min-h-screen bg-background text-foreground">
-                <GoogleOAuthProvider clientId="302029552769-h70ejlciavp5ijth66hf5pgnb5m1f2am.apps.googleusercontent.com">
+                <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
                     <AuthProvider>
                         <ThemeWrapper>
                             <div className="flex flex-col min-h-screen relative z-10">
