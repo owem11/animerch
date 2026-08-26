@@ -1,4 +1,4 @@
-# Animerch — AI-Powered Anime Merchandise Platform.
+# Animerch — AI-Powered Anime Merchandise Platform
 
 Animerch is a full-stack e-commerce platform built with Next.js, Node.js, and Supabase PostgreSQL. The platform integrates a **Learning-to-Rank (LRS)** machine learning model to optimize product discovery, alongside an automated AI email support pipeline and interactive admin analytics.
 
